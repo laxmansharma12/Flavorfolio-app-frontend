@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Layout } from "../Layouts/Layout";
 import BgImg from "../images/i-like-food.svg";
 import styled from "styled-components";
@@ -103,8 +103,6 @@ const Login = () => {
 	const [email, SetEmail] = useState();
 	const [password, setPassword] = useState();
 	const navigate = useNavigate();
-	const location = useLocation();
-
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		try {
