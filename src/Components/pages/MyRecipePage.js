@@ -155,7 +155,7 @@ const MyRecipe = () => {
 											>
 												<Recipe>
 													<Img
-														src={`/api/v1/food/food-photo/${list._id}`}
+														src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
 													></Img>
 													<Div>
 														<Span>{list.updatedAt.substring(0, 10)} </Span>
