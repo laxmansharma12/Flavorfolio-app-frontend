@@ -117,7 +117,8 @@ const Input = styled.input`
 	outline: none;
 	box-shadow: none;
 	height: 20px;
-
+	border-style: solid;
+	border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
 	padding: 5px 5px;
 	border-radius: 5px;
 	&:focus {
@@ -253,6 +254,8 @@ const InputField = styled.input`
 	outline: none;
 	box-shadow: none;
 	height: 20px;
+	border-style: solid;
+	border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
 	padding: 5px 5px;
 	border-radius: 5px;
 	&:focus {
