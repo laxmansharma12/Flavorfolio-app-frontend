@@ -14,7 +14,9 @@ const Home = () => {
 	//get all foods
 	const getAllFoods = async () => {
 		try {
-			const { data } = await axios.get("/api/v1/foods/get-food");
+			const { data } = await axios.get(
+				`${process.env.REACT_APP_API_BASE_URL}api/v1/foods/get-food`
+			);
 			if (data.success) {
 				setFood(data.foods);
 			}

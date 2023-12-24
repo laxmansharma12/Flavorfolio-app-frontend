@@ -117,7 +117,9 @@ const MyRecipe = () => {
 	const GetMyRecipes = async () => {
 		if (auth?.user) {
 			try {
-				const { data } = await axios.get("/api/v1/food/get-food");
+				const { data } = await axios.get(
+					`${process.env.REACT_APP_API_BASE_URL}api/v1/food/get-food`
+				);
 				const updatedRecipesListArray = data?.foods.filter(
 					(list) => list?.userId === auth?.user._id
 				);

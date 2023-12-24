@@ -14,7 +14,9 @@ const SavedRecipePage = () => {
 	const GetMySavedRecipes = async () => {
 		if (auth?.user) {
 			try {
-				const { data } = await axios.get("/api/v1/food/get-food");
+				const { data } = await axios.get(
+					`${process.env.REACT_APP_API_BASE_URL}api/v1/food/get-food`
+				);
 				const updatedSavedRecipesListArray = data?.foods.filter(
 					(list) => list?.userId === auth?.user._id
 				);
