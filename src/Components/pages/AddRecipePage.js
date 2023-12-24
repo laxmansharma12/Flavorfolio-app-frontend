@@ -356,9 +356,9 @@ const AddRecipePage = () => {
 				toast.success(data.message);
 				SetName("");
 				setDescription("");
-				setIngredients([]);
+				setIngredients([""]);
 				setPhoto("");
-				setSteps([]);
+				setSteps([""]);
 			} else {
 				toast.error(data.message);
 			}
@@ -375,7 +375,7 @@ const AddRecipePage = () => {
 					<LeftSection>
 						{photo ? (
 							<>
-								{photo && (
+								{photo && photo.size < 1000000 ? (
 									<>
 										<Img
 											src={URL.createObjectURL(photo)}
@@ -385,19 +385,30 @@ const AddRecipePage = () => {
 											Remove Image
 										</ImgRemoveBtn>
 									</>
+								) : (
+									<ImgContainer style={{ borderColor: "brown" }}>
+										<CiImageOn className="fileIcon" />
+										<br></br>
+										<L>Click to upload Photo</L>
+										<L style={{ color: "brown" }}>Size is more than 1mb</L>
+										<ImgInput
+											type="file"
+											name="photo"
+											accept="image/*"
+											onChange={(e) => setPhoto(e.target.files[0])}
+											hidden
+										></ImgInput>
+									</ImgContainer>
 								)}
 							</>
 						) : (
 							<ImgContainer>
-								{photo ? (
-									photo.name
-								) : (
-									<>
-										<CiImageOn className="fileIcon" />
-										<br></br>
-										<L>Click to upload Photo</L>
-									</>
-								)}
+								<CiImageOn className="fileIcon" />
+								<br></br>
+								<L>Click to upload Photo</L>
+								<L style={{ fontSize: "12px" }}>
+									*Size: less than 1mb required
+								</L>
 								<ImgInput
 									type="file"
 									name="photo"
@@ -421,11 +432,15 @@ const AddRecipePage = () => {
 										setCategory(value);
 									}}
 								>
-									{categories?.map((c) => (
-										<Option key={c._id} value={c._id}>
-											{c.name ? c.name : ""}
-										</Option>
-									))}
+									{auth.user && (
+										<>
+											{categories?.map((c) => (
+												<Option key={c._id} value={c._id} required>
+													{c.name ? c.name : ""}
+												</Option>
+											))}
+										</>
+									)}
 								</Select>
 							</Section>
 							<Section>
@@ -436,6 +451,7 @@ const AddRecipePage = () => {
 									value={name}
 									// placeholder="Enter dish name"
 									onChange={(e) => SetName(e.target.value)}
+									required
 								></Input>
 							</Section>
 							<Section>
@@ -446,6 +462,7 @@ const AddRecipePage = () => {
 									value={description}
 									// placeholder="Enter description"
 									onChange={(e) => setDescription(e.target.value)}
+									required
 								></TextAreaDesc>
 							</Section>
 							<Section>
@@ -459,6 +476,7 @@ const AddRecipePage = () => {
 												onChange={(e) =>
 													handleEditIngredient(index, e.target.value)
 												}
+												required
 											/>
 											{ingredients.length !== 1 && (
 												<IngredientRemoveBtn
@@ -484,6 +502,7 @@ const AddRecipePage = () => {
 												type="text"
 												value={value}
 												onChange={(e) => handleEditStep(index, e.target.value)}
+												required
 											/>
 											{steps.length !== 1 && (
 												<StepRemoveBtn onClick={() => handleRemoveStep(index)}>
