@@ -15,7 +15,7 @@ const SavedRecipePage = () => {
 		if (auth?.user) {
 			try {
 				const { data } = await axios.get(
-					`${process.env.REACT_APP_API_BASE_URL}api/v1/food/get-food`
+					`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-food`
 				);
 				const updatedSavedRecipesListArray = data?.foods.filter(
 					(list) => list?.userId === auth?.user._id
@@ -51,7 +51,7 @@ const SavedRecipePage = () => {
 											>
 												<Recipe>
 													<Img
-														src={`/api/v1/food/food-photo/${list._id}`}
+														src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
 													></Img>
 													<Div>
 														<Span>{list.updatedAt.substring(0, 10)} </Span>

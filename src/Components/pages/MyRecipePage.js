@@ -58,10 +58,6 @@ const Recipe = styled.div`
 		box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
 		filter: brightness(1.1);
 	}
-	@media (max-width: 640px) {
-		height: 350px;
-		width: 350px;
-	}
 `;
 
 const EmptyRecipes = styled.div`
@@ -118,7 +114,7 @@ const MyRecipe = () => {
 		if (auth?.user) {
 			try {
 				const { data } = await axios.get(
-					`${process.env.REACT_APP_API_BASE_URL}api/v1/food/get-food`
+					`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-food`
 				);
 				const updatedRecipesListArray = data?.foods.filter(
 					(list) => list?.userId === auth?.user._id
@@ -155,7 +151,7 @@ const MyRecipe = () => {
 											>
 												<Recipe>
 													<Img
-														src={`/api/v1/food/food-photo/${list._id}`}
+														src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
 													></Img>
 													<Div>
 														<Span>{list.updatedAt.substring(0, 10)} </Span>
