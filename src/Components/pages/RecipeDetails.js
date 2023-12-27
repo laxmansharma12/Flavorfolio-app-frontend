@@ -37,14 +37,6 @@ const RecipesDetailsInnerContainer = styled.div`
 		text-decoration: none;
 		color: #000;
 	}
-	@media (max-width: 1320px) {
-		max-width: 970px;
-		justify-content: center;
-	}
-	@media (max-width: 1000px) {
-		max-width: 650px;
-		justify-content: center;
-	}
 	@media (max-width: 640px) {
 		width: 89%;
 	}
@@ -92,6 +84,10 @@ const Top = styled.div`
 	flex-direction: row;
 	margin-bottom: 20px;
 	justify-content: space-between;
+	@media (max-width: 1000px) {
+		flex-direction: column;
+		margin: 0 20px;
+	}
 	@media (max-width: 640px) {
 		flex-direction: column;
 		gap: 20px;
@@ -107,6 +103,17 @@ const Middle = styled.div`
 	}
 	.rightsection {
 		width: 70%;
+	}
+	@media (max-width: 1000px) {
+		flex-direction: column;
+		margin: 0 20px;
+		width: 100%;
+		.leftsection {
+			width: fit-content;
+		}
+		.rightsection {
+			width: fit-content;
+		}
 	}
 	@media (max-width: 640px) {
 		flex-direction: column;
@@ -199,15 +206,6 @@ const ImgSimilar = styled.img`
 	height: 196px;
 	width: 280px;
 `;
-const ForWideScreen = styled.div`
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	@media (max-width: 640px) {
-		display: none;
-	}
-`;
 
 const ForPhoneScreen = styled.div`
 	@media (min-width: 640px) {
@@ -267,6 +265,17 @@ const InnerSimilar = styled.div`
 	flex-direction: row;
 	align-items: center;
 	justify-content: center;
+`;
+
+const ForWideScreen = styled.div`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: center;
+	@media (max-width: 640px) {
+		display: none;
+	}
 `;
 const H3 = styled.h3``;
 
