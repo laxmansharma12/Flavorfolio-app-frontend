@@ -1,34 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Layout } from "../Layouts/Layout";
 import SearchImgSpice from "../images/spices.png";
 import SearchImgFood from "../images/food1.png";
 import styled from "styled-components";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { useAuth } from "../../context/auth";
-
 const Home = () => {
-	const [auth, setAuth] = useAuth();
-	const [food, setFood] = useState();
-
-	//get all foods
-	const getAllFoods = async () => {
-		try {
-			const { data } = await axios.get(
-				`${process.env.REACT_APP_API_BASE_URL}/api/v1/foods/get-food`
-			);
-			if (data.success) {
-				setFood(data.foods);
-			}
-		} catch (error) {
-			console.log(error);
-			toast.error("Something went wrong in getting foods");
-		}
-	};
-
-	// useEffect(() => {
-	// 	getAllFoods();
-	// }, []);
 	return (
 		<Layout>
 			<SearchContainer>
@@ -102,7 +77,7 @@ const SearchLeftContainer = styled.div`
 
 	@media (max-width: 640px) {
 		order: 2;
-		margin-bottom: 30px;rgb(1, 39, 11)
+		margin-bottom: 30px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -172,38 +147,36 @@ const SubTitle = styled.div`
 //resume button styles
 
 const SearchButton = styled.a`
--webkit-appearance: button;
-    -moz-appearance: button;
-    appearance: button;
-    text-decoration: none;
-    width: 95%;
-    max-width: 200px;
-    text-align: center;
-    padding: 14px 0;
-    color:#FFF;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 20px;
-    font-weight: 600;
-    transition: all 0.2s ease-in-out !important;
-    	background-color: rgb(5, 163, 49);
-;import { axios } from 'axios';
-
+	-webkit-appearance: button;
+	-moz-appearance: button;
+	appearance: button;
+	text-decoration: none;
+	width: 95%;
+	max-width: 200px;
+	text-align: center;
+	padding: 14px 0;
+	color: #fff;
+	border-radius: 20px;
+	cursor: pointer;
+	font-size: 20px;
+	font-weight: 600;
+	transition: all 0.2s ease-in-out !important;
+	background-color: rgb(5, 163, 49);
 	border: none;
-   
-    &:hover {
-        transform: scale(1.05);
-    transition: all 0.4s ease-in-out;
-    box-shadow:  20px 20px 60px black,
-    filter: brightness(1);
-    }    
-    
-    
-    @media (max-width: 640px) {
-        padding: 12px 0;
-		margin-top:10px;
-        font-size: 18px;
-    }`;
+
+	&:hover {
+		transform: scale(1.05);
+		transition: all 0.4s ease-in-out;
+		box-shadow: 20px 20px 60px black;
+		filter: brightness(1);
+	}
+
+	@media (max-width: 640px) {
+		padding: 12px 0;
+		margin-top: 10px;
+		font-size: 18px;
+	}
+`;
 
 //---------------dp image styles------------------------------
 const Image = styled.img`

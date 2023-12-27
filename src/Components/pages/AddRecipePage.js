@@ -4,7 +4,7 @@ import BgImg from "../images/i-like-food.svg";
 import styled from "styled-components";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useAuth } from "../../context/auth";
+import { useAuth } from "../../context/authProvider";
 import { Select } from "antd";
 import { CiImageOn } from "react-icons/ci";
 
@@ -41,7 +41,7 @@ const AddRecipeInnerContainer = styled.div`
 	}
 `;
 
-const RightSection = styled.div`
+const InputDataControll = styled.div`
 	height: fit-content;
 	width: fit-content;
 	padding: 20px 30px;
@@ -67,7 +67,7 @@ const Form = styled.form`
 	@media (max-width: 640px) {
 		width: 320px;
 	}
-	.selec-category {
+	.select-category {
 		padding: 7px;
 		border: 1px solid #000;
 		border-radius: 5px;
@@ -157,7 +157,7 @@ const Button = styled.button`
 	}
 `;
 
-const LeftSection = styled.div`
+const PhotoControll = styled.div`
 	height: fit-content;
 	display: flex;
 	justify-content: center;
@@ -279,9 +279,7 @@ const AddRecipePage = () => {
 	//get all category
 	const getAllCategory = async () => {
 		try {
-			const { data } = await axios.get(
-				`${process.env.REACT_APP_API_BASE_URL}/api/v1/category/get-category`
-			);
+			const { data } = await axios.get("/api/v1/category/get-category");
 			if (data?.success) {
 				setCategories(data?.category);
 			}
@@ -352,7 +350,7 @@ const AddRecipePage = () => {
 			productData.append("userId", userId._id);
 			productData.append("category", category);
 			const { data } = await axios.post(
-				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/create-food`,
+				"/api/v1/food/create-food",
 				productData
 			);
 			if (data) {
@@ -375,7 +373,7 @@ const AddRecipePage = () => {
 			<AddRecipeContainer>
 				<AddRecipeInnerContainer>
 					<AddRecipeHeader>Add Recipe</AddRecipeHeader>
-					<LeftSection>
+					<PhotoControll>
 						{photo ? (
 							<>
 								{photo && photo.size < 1000000 ? (
@@ -421,8 +419,8 @@ const AddRecipePage = () => {
 								></ImgInput>
 							</ImgContainer>
 						)}
-					</LeftSection>
-					<RightSection>
+					</PhotoControll>
+					<InputDataControll>
 						<Form onSubmit={handleAddRecipe}>
 							<Section>
 								<L htmlFor="dish-name">Category</L>
@@ -430,7 +428,7 @@ const AddRecipePage = () => {
 									placeholder="Select a category"
 									size="large"
 									bordered={false}
-									className="selec-category"
+									className="select-category"
 									onChange={(value) => {
 										setCategory(value);
 									}}
@@ -520,7 +518,7 @@ const AddRecipePage = () => {
 							</Section>
 							<Button type="submit">Add Recipe</Button>
 						</Form>
-					</RightSection>
+					</InputDataControll>
 				</AddRecipeInnerContainer>
 			</AddRecipeContainer>
 		</Layout>

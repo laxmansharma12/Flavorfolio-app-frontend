@@ -6,7 +6,7 @@ import styled from "styled-components";
 import LoginImg from "../images/loginImg.jpg";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useAuth } from "../../context/auth";
+import { useAuth } from "../../context/authProvider";
 
 const LoginContainer = styled.div`
 	height: 85vh;
@@ -106,13 +106,10 @@ const Login = () => {
 	const handleLogin = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await axios.post(
-				`${process.env.REACT_APP_API_BASE_URL}/api/v1/auth/login`,
-				{
-					email,
-					password,
-				}
-			);
+			const res = await axios.post("/api/v1/auth/login", {
+				email,
+				password,
+			});
 			if (res.data.success) {
 				toast.success(res.data.message);
 				setAuth({

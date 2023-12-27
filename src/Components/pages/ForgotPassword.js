@@ -15,14 +15,11 @@ const ForgotPassword = () => {
 	const handleReset = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await axios.post(
-				`${process.env.REACT_APP_API_BASE_URL}/api/v1/auth/forgot-password`,
-				{
-					email,
-					answer,
-					newPassword,
-				}
-			);
+			const res = await axios.post("/api/v1/auth/forgot-password", {
+				email,
+				answer,
+				newPassword,
+			});
 			if (res.data.success) {
 				toast.success(res.data.message);
 				setAnswer("");
@@ -36,8 +33,8 @@ const ForgotPassword = () => {
 	};
 	return (
 		<Layout title={"Reset Password"}>
-			<ResetContainer>
-				<ResetInnerContainer>
+			<ForgotPasswordContainer>
+				<ForgotPasswordInnerContainer>
 					<LeftSection>
 						<Img src={LoginImg}></Img>
 					</LeftSection>
@@ -75,15 +72,15 @@ const ForgotPassword = () => {
 							<Button type="submit">Reset</Button>
 						</Form>
 					</RightSection>
-				</ResetInnerContainer>
-			</ResetContainer>
+				</ForgotPasswordInnerContainer>
+			</ForgotPasswordContainer>
 		</Layout>
 	);
 };
 
 export default ForgotPassword;
 
-const ResetContainer = styled.div`
+const ForgotPasswordContainer = styled.div`
 	height: 85vh;
 	width: 100%;
 	background-image: url(${BgImg});
@@ -152,7 +149,7 @@ const Img = styled.img`
 	height: 100%;
 	width: 100%;
 `;
-const ResetInnerContainer = styled.div`
+const ForgotPasswordInnerContainer = styled.div`
 	display: flex;
 	flex-direction: row;
 	border-radius: 10px;

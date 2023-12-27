@@ -6,7 +6,7 @@ import RegisterImg from "../images/registerBg1.png";
 import styled from "styled-components";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useAuth } from "../../context/auth";
+import { useAuth } from "../../context/authProvider";
 
 const RegisterContainer = styled.div`
 	height: 85vh;
@@ -144,15 +144,12 @@ const Registeration = () => {
 	const handlesubmit = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await axios.post(
-				`${process.env.REACT_APP_API_BASE_URL}/api/v1/auth/register`,
-				{
-					name,
-					email,
-					password,
-					answer,
-				}
-			);
+			const res = await axios.post("/api/v1/auth/register", {
+				name,
+				email,
+				password,
+				answer,
+			});
 			if (res.data.success) {
 				toast.success(res.data.message);
 				navigate("/login");
