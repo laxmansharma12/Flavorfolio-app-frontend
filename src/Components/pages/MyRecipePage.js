@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../Layouts/Layout";
-import BgImg from "../images/i-like-food.svg";
 import styled from "styled-components";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Radio, Select } from "antd";
-// import { FaEdit } from "react-icons/fa";
-// import { MdDelete, MdHeight } from "react-icons/md";
 import { useAuth } from "../../context/authProvider";
 import toast from "react-hot-toast";
-// import { Modal } from "antd";
-// import { FaRegQuestionCircle } from "react-icons/fa";
-// import toast from "react-hot-toast";
+
 const Option = Select;
 const MyrecipesContainer = styled.div`
 	width: 100%;
-	/* background-image: url(${BgImg}); */
 	background-color: rgb(243, 243, 243);
 	display: flex;
 	justify-content: center;
@@ -62,13 +56,10 @@ const Recipe = styled.div`
 	flex-direction: column;
 	align-items: center;
 	padding-top: 20px;
-	/* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
-	/* border-radius: 5px; */
 	transition: all 0.5s ease-in-out;
 	margin-bottom: 10px;
 	&:hover {
 		transform: translateY(-10px);
-		/* box-shadow: 0 3px 8px rgba(0, 0, 0, 0.6); */
 		filter: brightness(1.1);
 	}
 `;
@@ -159,11 +150,6 @@ const SelectGroup = styled.div`
 	@media (min-width: 1120px) {
 		display: none;
 	}
-	@media (max-width: 640px) {
-		/* position: static;
-		top: 18%;
-		left: 28%; */
-	}
 `;
 
 const MyRecipe = () => {
@@ -171,15 +157,14 @@ const MyRecipe = () => {
 	const [categories, setCategories] = useState([]);
 	const [category, setCategory] = useState("All");
 	const [search, setSearch] = useState([]);
-	// const [askDelete, setAskDelete] = useState(false);
 	const [auth, setAuth] = useAuth();
-	// const [ok, setOk] = useState();
-	// const [ingredients, setIngredients] = useState([]);
 
 	//get all category
 	const getAllCategory = async () => {
 		try {
-			const { data } = await axios.get("/api/v1/category/get-category");
+			const { data } = await axios.get(
+				`${process.env.REACT_APP_API_BASE_URL}/api/v1/category/get-category`
+			);
 			if (data?.success) {
 				setCategories(data?.category);
 			}
@@ -193,7 +178,9 @@ const MyRecipe = () => {
 	const GetMyRecipes = async () => {
 		if (auth?.user) {
 			try {
-				const { data } = await axios.get("/api/v1/food/get-food");
+				const { data } = await axios.get(
+					`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-food`
+				);
 				const updatedRecipesListArray = data?.foods.filter(
 					(list) => list?.userId === auth?.user._id
 				);
@@ -285,7 +272,7 @@ const MyRecipe = () => {
 													>
 														<Recipe>
 															<Img
-																src={`/api/v1/food/food-photo/${list._id}`}
+																src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
 																alt="Recipe Photo"
 															></Img>
 															<Div>
@@ -312,7 +299,7 @@ const MyRecipe = () => {
 															>
 																<Recipe>
 																	<Img
-																		src={`/api/v1/food/food-photo/${s._id}`}
+																		src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${s._id}`}
 																		alt="Recipe Photo"
 																	></Img>
 																	<Div>

@@ -279,7 +279,9 @@ const AddRecipePage = () => {
 	//get all category
 	const getAllCategory = async () => {
 		try {
-			const { data } = await axios.get("/api/v1/category/get-category");
+			const { data } = await axios.get(
+				`${process.env.REACT_APP_API_BASE_URL}/api/v1/category/get-category`
+			);
 			if (data?.success) {
 				setCategories(data?.category);
 			}
@@ -350,7 +352,7 @@ const AddRecipePage = () => {
 			productData.append("userId", userId._id);
 			productData.append("category", category);
 			const { data } = await axios.post(
-				"/api/v1/food/create-food",
+				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/create-food`,
 				productData
 			);
 			if (data) {
