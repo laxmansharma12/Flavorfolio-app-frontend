@@ -230,7 +230,8 @@ const Header = () => {
 	const [Open, setOpen] = React.useState(false);
 	const navHide = useRef();
 	const mobileIcon = useRef();
-	const [mobIcon, setMobIcon] = useState(false);
+	const [bars, setBars] = useState(true);
+	const [cross, setCross] = useState(false);
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {
@@ -272,18 +273,21 @@ const Header = () => {
 					</NavItems>
 				</LeftSection>
 				<MobileIcon ref={mobileIcon}>
-					{!mobIcon ? (
+					{bars && (
 						<FaBars
 							onClick={() => {
 								setOpen(!Open);
-								setMobIcon(true);
+								setBars(false);
+								setCross(true);
 							}}
 						/>
-					) : (
+					)}
+					{cross && (
 						<RxCross2
 							onClick={() => {
 								setOpen(!Open);
-								setMobIcon(false);
+								setBars(true);
+								setCross(false);
 							}}
 						/>
 					)}
@@ -312,6 +316,8 @@ const Header = () => {
 						href="/addrecipe"
 						onClick={() => {
 							setOpen(!Open);
+							setCross(false);
+							setBars(true);
 						}}
 					>
 						Add-recipe
@@ -320,6 +326,8 @@ const Header = () => {
 						href="myrecipe"
 						onClick={() => {
 							setOpen(!Open);
+							setCross(false);
+							setBars(true);
 						}}
 					>
 						My-recipe
@@ -328,6 +336,8 @@ const Header = () => {
 						href="savedrecipe"
 						onClick={() => {
 							setOpen(!Open);
+							setCross(false);
+							setBars(true);
 						}}
 					>
 						Saved-recipe
@@ -336,6 +346,8 @@ const Header = () => {
 						href="/contact"
 						onClick={() => {
 							setOpen(!Open);
+							setCross(false);
+							setBars(true);
 						}}
 					>
 						Contact
