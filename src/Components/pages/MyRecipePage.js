@@ -46,6 +46,9 @@ const MyRecipesInnerContainer = styled.div`
 		max-width: 650px;
 		justify-content: center;
 	}
+	@media (max-width: 640px) {
+		width: 89%;
+	}
 `;
 const Recipe = styled.div`
 	height: fit-content;

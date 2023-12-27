@@ -17,9 +17,6 @@ const RecipesDetailsContainer = styled.div`
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-
-	FaRegQuestionCircle.QuestionMark {
-	}
 `;
 
 const RecipesDetailsInnerContainer = styled.div`
@@ -48,6 +45,9 @@ const RecipesDetailsInnerContainer = styled.div`
 		max-width: 650px;
 		justify-content: center;
 	}
+	@media (max-width: 640px) {
+		width: 89%;
+	}
 `;
 
 const LeftSection = styled.div`
@@ -55,6 +55,7 @@ const LeftSection = styled.div`
 	height: 100%;
 	@media (max-width: 640px) {
 		display: flex;
+		width: fit-content;
 		justify-content: center;
 		align-items: center;
 	}
@@ -79,7 +80,7 @@ const RightSection = styled.div`
 	height: 100%;
 	width: 100%;
 	@media (max-width: 640px) {
-		width: 65%;
+		width: fit-content;
 	}
 `;
 const Section = styled.div``;
@@ -110,14 +111,11 @@ const Middle = styled.div`
 	@media (max-width: 640px) {
 		flex-direction: column;
 		width: 100%;
-		label {
-			margin-left: 20px;
-		}
 		.leftsection {
-			width: 100%;
+			width: fit-content;
 		}
 		.rightsection {
-			width: 98%;
+			width: fit-content;
 		}
 	}
 `;
