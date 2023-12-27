@@ -1,7 +1,12 @@
 import React from "react";
+import { Layout } from "../Layouts/Layout";
 
 const SavedRecipePage = () => {
-	return <div>SavedRecipePage</div>;
+	return (
+		<Layout>
+			<div>SavedRecipePage</div>
+		</Layout>
+	);
 };
 
 export default SavedRecipePage;
