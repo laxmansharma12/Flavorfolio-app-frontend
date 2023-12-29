@@ -98,11 +98,11 @@ const Middle = styled.div`
 	flex-direction: row;
 	width: 100%;
 	.leftsection {
-		width: 30%;
+		width: 33%;
 		padding-right: 50px;
 	}
 	.rightsection {
-		width: 70%;
+		width: 65%;
 	}
 	@media (max-width: 1000px) {
 		flex-direction: column;
@@ -293,7 +293,7 @@ export const RecipeDetails = () => {
 		if (params?.slug) getrecipe();
 	}, [params?.slug]);
 
-	//getRecipe
+	//get single Recipe
 	const getrecipe = async () => {
 		try {
 			const { data } = await axios.get(
@@ -338,10 +338,12 @@ export const RecipeDetails = () => {
 				<RecipesDetailsInnerContainer>
 					<Top>
 						<LeftSection>
-							<Img
-								src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${recipe._id}`}
-								alt="Recipe Photo"
-							></Img>
+							{recipe._id && (
+								<Img
+									src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${recipe._id}`}
+									alt="Recipe Photo"
+								></Img>
+							)}
 						</LeftSection>
 						<RightSection>
 							<Name>{recipe.name}</Name>
@@ -357,7 +359,11 @@ export const RecipeDetails = () => {
 							</L>
 							{auth?.user?._id === recipe?.userId && (
 								<ButtonController>
-									<EditBtn>
+									<EditBtn
+										onClick={() => {
+											navigate(`/update-recipe/${recipe.slug}`);
+										}}
+									>
 										<FaEdit />
 									</EditBtn>
 									<DeleteBtn

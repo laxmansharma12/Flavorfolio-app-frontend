@@ -3,6 +3,79 @@ import { Layout } from "../Layouts/Layout";
 import SearchImgSpice from "../images/spices.png";
 import SearchImgFood from "../images/food1.png";
 import styled from "styled-components";
+import IndImg from "../images/gate-of-india.png";
+import AmericaImg from "../images/statue-of-liberty.png";
+import ThaiImg from "../images/wat-phra-kaew.png";
+import MexicoImg from "../images/mexico-pyramid.png";
+import ChinaImg from "../images/chinese.png";
+import OtherImg from "../images/other.png";
+import { Link } from "react-router-dom";
+
+const CategoryBanner = styled.div`
+	background-color: rgb(243, 243, 243);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 30px 0;
+`;
+const CategoryBannerInner = styled.div`
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	width: 100%;
+	max-width: 1300px;
+	.link {
+		text-decoration: none;
+		color: #000;
+	}
+	@media (max-width: 1200px) {
+		justify-content: center;
+		width: 80%;
+		gap: 20px;
+	}
+	@media (max-width: 640px) {
+		justify-content: center;
+		width: 100%;
+		gap: 30px;
+	}
+`;
+const Category = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	gap: 10px;
+	height: 150px;
+	width: 150px;
+	padding: 20px;
+	transition: all 0.2s ease-in-out !important;
+	cursor: pointer;
+	&:hover {
+		transform: scale(1.05);
+		transition: all 0.5s ease-in-out;
+		filter: brightness(1);
+	}
+	@media (max-width: 640px) {
+		height: 100px;
+		width: 100px;
+	}
+`;
+const Img = styled.img`
+	background-color: rgb(229, 231, 235);
+	border-radius: 50%;
+	padding: 15px;
+	height: 90%;
+	width: 90%;
+	&:hover {
+		box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+	}
+`;
+const CategoryName = styled.label`
+	font-weight: 500;
+`;
+
 const Home = () => {
 	return (
 		<Layout>
@@ -11,10 +84,10 @@ const Home = () => {
 					<SearchLeftContainer>
 						<Title>The Easiest Way To Make Your Favorite Meal</Title>
 						<SubTitle>
-							Discover 10+ recipes in your hand with the best recipe. Help you
+							Discover 100+ recipes in your hand with the best recipe. Help you
 							to find the easiest way to cook.
 						</SubTitle>
-						<SearchButton href="/explore">Explore</SearchButton>
+						<ExploreButton href="/explore">Explore</ExploreButton>
 					</SearchLeftContainer>
 					<SearchRightContainer>
 						<SearchRightInnerContainer>
@@ -24,6 +97,46 @@ const Home = () => {
 					</SearchRightContainer>
 				</SearchInnerContainer>
 			</SearchContainer>
+			<CategoryBanner>
+				<CategoryBannerInner>
+					<Link className="link" to={"/indian"}>
+						<Category>
+							<Img src={IndImg}></Img>
+							<CategoryName>Indian</CategoryName>
+						</Category>
+					</Link>
+					<Link className="link" to={"/thai"}>
+						<Category>
+							<Img src={ThaiImg}></Img>
+							<CategoryName>Thai</CategoryName>
+						</Category>
+					</Link>
+					<Link className="link" to={"/american"}>
+						<Category>
+							<Img src={AmericaImg}></Img>
+							<CategoryName>American</CategoryName>
+						</Category>
+					</Link>
+					<Link className="link" to={"/chinese"}>
+						<Category>
+							<Img src={ChinaImg}></Img>
+							<CategoryName>Chinese</CategoryName>
+						</Category>
+					</Link>
+					<Link className="link" to={"Mexican"}>
+						<Category>
+							<Img src={MexicoImg}></Img>
+							<CategoryName>Mexican</CategoryName>
+						</Category>
+					</Link>
+					<Link className="link" to={"/other"}>
+						<Category>
+							<Img src={OtherImg}></Img>
+							<CategoryName>Other</CategoryName>
+						</Category>
+					</Link>
+				</CategoryBannerInner>
+			</CategoryBanner>
 		</Layout>
 	);
 };
@@ -146,7 +259,7 @@ const SubTitle = styled.div`
 
 //resume button styles
 
-const SearchButton = styled.a`
+const ExploreButton = styled.a`
 	-webkit-appearance: button;
 	-moz-appearance: button;
 	appearance: button;
@@ -167,7 +280,6 @@ const SearchButton = styled.a`
 	&:hover {
 		transform: scale(1.05);
 		transition: all 0.4s ease-in-out;
-		box-shadow: 20px 20px 60px black;
 		filter: brightness(1);
 	}
 

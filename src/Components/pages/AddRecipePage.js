@@ -269,7 +269,7 @@ const AddRecipePage = () => {
 	const [auth, setAuth] = useAuth();
 	const [name, SetName] = useState("");
 	const [userId, setUserId] = useState([]);
-	const [category, setCategory] = useState("");
+	const [category, setCategory] = useState();
 	const [photo, setPhoto] = useState("");
 	const [description, setDescription] = useState("");
 
@@ -361,6 +361,7 @@ const AddRecipePage = () => {
 				setDescription("");
 				setIngredients([""]);
 				setPhoto("");
+				setCategory();
 				setSteps([""]);
 			} else {
 				toast.error(data.message);
@@ -434,6 +435,7 @@ const AddRecipePage = () => {
 									onChange={(value) => {
 										setCategory(value);
 									}}
+									value={category}
 								>
 									{auth.user && (
 										<>

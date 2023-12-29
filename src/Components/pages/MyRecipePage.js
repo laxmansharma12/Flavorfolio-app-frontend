@@ -201,6 +201,7 @@ const MyRecipe = () => {
 		GetMyRecipes();
 		getAllCategory();
 	}, [auth?.user]);
+
 	useEffect(() => {
 		const updateSearchRecipes = recipesListArray.filter(
 			(list) => list?.category === category
@@ -232,7 +233,7 @@ const MyRecipe = () => {
 							</Radio.Group>
 						</RadioGroup>
 						<SelectGroup>
-							<Select
+							<Select.Option
 								placeholder="Sort by category"
 								className="select-category"
 								size="large"
@@ -249,7 +250,7 @@ const MyRecipe = () => {
 										))}
 									</>
 								)}
-							</Select>
+							</Select.Option>
 						</SelectGroup>
 					</Section>
 					<L>Total Recipes: {recipesListArray.length}</L>

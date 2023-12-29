@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Link as LinkR } from "react-router-dom";
+import { Link as LinkR, useLocation } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import toast from "react-hot-toast";
@@ -232,6 +232,7 @@ const Header = () => {
 	const mobileIcon = useRef();
 	const [bars, setBars] = useState(true);
 	const [cross, setCross] = useState(false);
+	const location = useLocation();
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {
@@ -266,6 +267,7 @@ const Header = () => {
 				<LeftSection>
 					<NavLogo to="/">Flavorfolio</NavLogo>
 					<NavItems>
+						{location.pathname !== "/" && <NavLink href="/">Home</NavLink>}
 						<NavLink href="/addrecipe">AddRecipe</NavLink>
 						<NavLink href="/myrecipe">MyRecipes</NavLink>
 						<NavLink href="/savedrecipe">SavedRecipes</NavLink>
