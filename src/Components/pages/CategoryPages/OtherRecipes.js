@@ -141,6 +141,9 @@ const OtherRecipes = () => {
 			console.log(error);
 		}
 	};
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
 
 	//get all recipes
 	const GetMySavedRecipes = async () => {

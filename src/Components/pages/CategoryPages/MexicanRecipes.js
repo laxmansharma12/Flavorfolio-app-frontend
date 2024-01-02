@@ -141,6 +141,10 @@ const MexicanRecipes = () => {
 		}
 	};
 
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
 	//get all recipes
 	const GetMySavedRecipes = async () => {
 		if (auth?.user) {

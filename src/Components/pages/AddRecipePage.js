@@ -370,6 +370,9 @@ const AddRecipePage = () => {
 			console.log(error);
 		}
 	};
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
 
 	return (
 		<Layout title={"AddRecipe"}>

@@ -166,6 +166,10 @@ const AmericanRecipes = () => {
 		GetMySavedRecipes();
 	}, [auth?.user]);
 
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
 	const sortSavedRecipes = () => {
 		const idsArray1 = recipesListArray.map((item) => item);
 		const idsArray2 = fetchedRecipes.map((item) => item._id);

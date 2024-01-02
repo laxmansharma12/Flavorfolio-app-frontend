@@ -212,6 +212,10 @@ const SavedRecipePage = () => {
 		setSearch(updateSearchRecipes);
 	}, [category]);
 
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
 	return (
 		<Layout title={"My-savedRecipes"}>
 			<MyrecipesContainer>

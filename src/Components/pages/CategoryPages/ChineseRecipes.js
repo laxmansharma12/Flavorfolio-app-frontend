@@ -236,6 +236,10 @@ const ChineseRecipes = () => {
 		}));
 	};
 
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
 	return (
 		<Layout title={"ChinseseRecipes"}>
 			<ChineseRecipesContainer>

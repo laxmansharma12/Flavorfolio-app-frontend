@@ -331,6 +331,10 @@ export const RecipeDetails = () => {
 			toast.error("Something went wrong");
 		}
 	};
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
+
 	return (
 		<Layout title={"Recipe details"}>
 			<RecipesDetailsContainer>
