@@ -231,6 +231,9 @@ const ThaiRecipes = () => {
 			[recipeId]: !prevSaveRecipes[recipeId],
 		}));
 	};
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, []);
 
 	return (
 		<Layout title={"ThaiRecipes"}>

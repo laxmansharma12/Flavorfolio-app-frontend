@@ -231,6 +231,7 @@ const IndianRecipes = () => {
 			[recipeId]: !prevSaveRecipes[recipeId],
 		}));
 	};
+
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
