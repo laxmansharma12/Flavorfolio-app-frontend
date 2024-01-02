@@ -58,6 +58,7 @@ const Category = styled.div`
 	}
 	@media (max-width: 640px) {
 		height: 100px;
+		padding: 20px;
 		width: 100px;
 	}
 `;
@@ -69,6 +70,10 @@ const Img = styled.img`
 	width: 70%;
 	&:hover {
 		box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+	}
+	@media (max-width: 640px) {
+		height: 90%;
+		width: 90%;
 	}
 `;
 const CategoryName = styled.label`
