@@ -144,6 +144,7 @@ const ContactButton = styled.input`
 
 const ContactPage = () => {
 	const form = useRef();
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		emailjs
@@ -159,11 +160,10 @@ const ContactPage = () => {
 					toast.success("Message sent successfull!!");
 				},
 				(error) => {
-					toast.error("Problem in sending message");
+					console.log(error.text);
 				}
 			);
 	};
-
 	return (
 		<Layout title={"Contact"}>
 			<Container>
@@ -177,7 +177,7 @@ const ContactPage = () => {
 							reach out to us.
 						</Desc>
 					</DescForm>
-					<ContactForm onSubmit={handleSubmit}>
+					<ContactForm ref={form} onSubmit={handleSubmit}>
 						<ContactInput
 							placeholder="Your Email"
 							name="from_email"
