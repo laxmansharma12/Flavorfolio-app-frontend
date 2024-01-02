@@ -357,7 +357,7 @@ export const RecipeDetails = () => {
 							<L style={{ margin: "10px 0" }}>
 								Created At: <Span>{recipe.updatedAt?.substring(0, 10)}</Span>
 							</L>
-							{auth?.user?._id === recipe?.userId && (
+							{auth?.user?._id === recipe?.userId || auth?.user?.role === 1 ? (
 								<ButtonController>
 									<EditBtn
 										onClick={() => {
@@ -375,6 +375,8 @@ export const RecipeDetails = () => {
 										<MdDelete />
 									</DeleteBtn>
 								</ButtonController>
+							) : (
+								""
 							)}
 						</RightSection>
 					</Top>
@@ -405,7 +407,7 @@ export const RecipeDetails = () => {
 					</Middle>
 					<Modal
 						centered
-						width={"250px"}
+						width={"200px"}
 						open={askDelete}
 						onOk={() => {
 							handleDelete();
@@ -416,13 +418,14 @@ export const RecipeDetails = () => {
 						cancelButtonProps={{ block: false }}
 						style={{
 							textAlign: "center",
-							justifyContent: "center",
 						}}
 					>
 						<FaRegQuestionCircle
 							className="QuestionMark"
-							style={{ fontSize: "150px", color: "red", textAlign: "center" }}
+							style={{ fontSize: "100px", color: "red", textAlign: "center" }}
 						/>
+						<br></br>
+						<L>Delete this recipe?</L>
 					</Modal>
 					<Similar>
 						<H3>You may like these</H3>

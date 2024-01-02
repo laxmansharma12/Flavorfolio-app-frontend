@@ -49,7 +49,6 @@ const Category = styled.div`
 	gap: 10px;
 	height: 150px;
 	width: 150px;
-	padding: 20px;
 	transition: all 0.2s ease-in-out !important;
 	cursor: pointer;
 	&:hover {
@@ -66,8 +65,8 @@ const Img = styled.img`
 	background-color: rgb(229, 231, 235);
 	border-radius: 50%;
 	padding: 15px;
-	height: 90%;
-	width: 90%;
+	height: 70%;
+	width: 70%;
 	&:hover {
 		box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 	}
@@ -144,7 +143,6 @@ const Home = () => {
 export default Home;
 
 const SearchContainer = styled.div`
-	// background-color: rgb(2, 52, 15);
 	background-color: rgb(0, 61, 17);
 	display: flex;
 	justify-content: center;

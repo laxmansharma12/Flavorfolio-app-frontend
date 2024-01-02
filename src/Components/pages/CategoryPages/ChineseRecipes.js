@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Layout } from "../../Layouts/Layout";
+import { IoBookmarkOutline } from "react-icons/io5";
+import { IoBookmark } from "react-icons/io5";
+import toast from "react-hot-toast";
+import { useAuth } from "../../../context/authProvider";
 
 const ChineseRecipesContainer = styled.div`
 	width: 100%;
@@ -104,22 +108,27 @@ const Div = styled.div`
 const H1 = styled.h1`
 	margin-bottom: 5px;
 `;
-
-const EmptyRecipes = styled.div`
-	margin: auto;
+const SubTitle = styled.div`
 	display: flex;
-	justify-content: center;
-	flex-direction: column;
+	justify-content: space-between;
 	align-items: center;
-	text-align: center;
-	gap: 10px;
-	.label {
-		font-size: 50px;
-	}
+	flex-direction: row;
+	width: 93%;
 `;
 
 const ChineseRecipes = () => {
 	const [recipesListArray, setRecipesListArray] = useState([]);
+	const [recipesList, setRecipesList] = useState([]);
+	const [savedRecipes, setSavedRecipes] = useState([]);
+	const [auth, setAuth] = useAuth();
+	const [userId, setUserId] = useState([]);
+	const [fetchedRecipes, setFetchedRecipes] = useState([]);
+	const navigate = useNavigate();
+	const [showBookMarkControll, setShowBookMarkControll] = useState({});
+
+	useEffect(() => {
+		setUserId(auth?.user);
+	}, [auth]);
 
 	//get all recipes
 	const GetMyRecipes = async () => {
@@ -128,19 +137,105 @@ const ChineseRecipes = () => {
 				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-food`
 			);
 			const updatedRecipesListArray = data?.foods.filter(
-				(list) => list?.category === "65806212a2ae14d295402246"
+				(list) => list?.category === "65806221a2ae14d295402249"
 			);
-			// Set the new array to the state
 			setRecipesListArray(updatedRecipesListArray);
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
+	//get all recipes
+	const GetMySavedRecipes = async () => {
+		if (auth?.user) {
+			try {
+				const { data } = await axios.get(
+					`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-savedRecipes`
+				);
+				const updatedRecipesListArray = data?.Recipes.filter(
+					(list) => list?.userId === auth?.user._id
+				);
+
+				// Set the new array to the state
+				setFetchedRecipes(updatedRecipesListArray);
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	};
+
 	//lifecycle method
 	useEffect(() => {
 		GetMyRecipes();
-	}, []);
+		GetMySavedRecipes();
+	}, [auth?.user]);
+
+	const sortSavedRecipes = () => {
+		const idsArray1 = recipesListArray.map((item) => item);
+		const idsArray2 = fetchedRecipes.map((item) => item._id);
+
+		const uniqueIdsArray1 = idsArray1.filter((id) =>
+			idsArray2.includes(id._id)
+		);
+
+		const uniqueIdsArray2 = idsArray1.filter(
+			(id) => !idsArray2.includes(id._id)
+		);
+		// // Set the new array to the state
+		setSavedRecipes(uniqueIdsArray1);
+		setRecipesList(uniqueIdsArray2);
+	};
+
+	useEffect(() => {
+		sortSavedRecipes();
+	}, [recipesListArray]); // Add recipesListArray as a dependency to avoid infinite loop
+
+	const handleSaveRecipe = async (e, recipe) => {
+		e.stopPropagation();
+
+		try {
+			const RecipeData = new FormData();
+			RecipeData.append("name", recipe.name);
+			RecipeData.append("_id", recipe._id);
+			RecipeData.append("description", recipe.description);
+			RecipeData.append("ingredients", recipe.ingredients);
+			RecipeData.append("steps", recipe.steps);
+			RecipeData.append("photo", recipe.photo);
+			RecipeData.append("userId", userId._id);
+			RecipeData.append("category", recipe.category);
+			const { data } = await axios.post(
+				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/save-recipe`,
+				RecipeData
+			);
+			if (data.success) {
+				toast.success(data.message);
+			} else {
+				toast.error(data.message);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleDeleteSavedRecipe = async (e, id) => {
+		e.stopPropagation();
+		try {
+			const res = await axios.delete(
+				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/delete-recipe/${id}`
+			);
+			toast.success(res?.data?.message);
+		} catch (error) {
+			console.log(error);
+			toast.error("Something went wrong");
+		}
+	};
+	const toggleBookMark = (recipeId) => {
+		setShowBookMarkControll((prevSaveRecipes) => ({
+			...prevSaveRecipes,
+			[recipeId]: !prevSaveRecipes[recipeId],
+		}));
+	};
+
 	return (
 		<Layout title={"ChinseseRecipes"}>
 			<ChineseRecipesContainer>
@@ -151,38 +246,120 @@ const ChineseRecipes = () => {
 				</L>
 				<ChineseRecipesInnerContainer>
 					<>
-						{recipesListArray.length !== 0 ? (
+						{auth?.user ? (
 							<>
-								{recipesListArray.map((list) => (
-									<Link
-										className="recipeLink"
+								{savedRecipes.map((list) => (
+									<Recipe
 										key={list._id}
-										to={`/recipe/${list.slug}`}
-										style={{
-											height: "fit-content",
-											width: "fit-content",
+										onClick={() => {
+											navigate(`/recipe/${list.slug}`);
 										}}
 									>
-										<Recipe>
-											<Img
-												src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
-												alt="Recipe Photo"
-											></Img>
-											<Div>
-												<Name>{list.name.substring(0, 25)}</Name>
-												<Span>{list.updatedAt.substring(0, 10)}</Span>
-											</Div>
-										</Recipe>
-									</Link>
+										<Img
+											src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
+											alt="Recipe Photo"
+										></Img>
+										<Div>
+											<SubTitle>
+												<Name>{list?.name?.substring(0, 25)}</Name>
+												{!showBookMarkControll[list._id] && (
+													<IoBookmark
+														size={20}
+														color="grey"
+														onClick={(e) => {
+															e.stopPropagation();
+															handleDeleteSavedRecipe(e, list._id);
+															toggleBookMark(list._id);
+														}}
+													/>
+												)}
+
+												{showBookMarkControll[list._id] && (
+													<IoBookmarkOutline
+														size={20}
+														onClick={(e) => {
+															e.stopPropagation();
+															toggleBookMark(list._id);
+															handleSaveRecipe(e, list);
+														}}
+													/>
+												)}
+											</SubTitle>
+											<Span>{list?.updatedAt?.substring(0, 10)}</Span>
+										</Div>
+									</Recipe>
+								))}
+								{recipesList.map((list) => (
+									<Recipe
+										key={list._id}
+										onClick={() => {
+											navigate(`/recipe/${list.slug}`);
+										}}
+									>
+										<Img
+											src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
+											alt="Recipe Photo"
+										></Img>
+										<Div>
+											<SubTitle>
+												<Name>{list?.name?.substring(0, 25)}</Name>
+												{showBookMarkControll[list._id] && (
+													<IoBookmark
+														size={20}
+														color="grey"
+														onClick={(e) => {
+															e.stopPropagation();
+															handleDeleteSavedRecipe(e, list._id);
+															toggleBookMark(list._id);
+														}}
+													/>
+												)}
+
+												{!showBookMarkControll[list._id] && (
+													<IoBookmarkOutline
+														size={20}
+														onClick={(e) => {
+															e.stopPropagation();
+															toggleBookMark(list._id);
+															handleSaveRecipe(e, list);
+														}}
+													/>
+												)}
+											</SubTitle>
+											<Span>{list?.updatedAt?.substring(0, 10)}</Span>
+										</Div>
+									</Recipe>
 								))}
 							</>
 						) : (
-							<EmptyRecipes>
-								<L className="label">No Recipes</L>
-								<L>
-									<Link to={"/addrecipe"}>Click here</Link> to add your recipes
-								</L>
-							</EmptyRecipes>
+							<>
+								{recipesListArray.map((list) => (
+									<Recipe
+										key={list._id}
+										onClick={() => {
+											navigate(`/recipe/${list.slug}`);
+										}}
+									>
+										<Img
+											src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
+											alt="Recipe Photo"
+										></Img>
+										<Div>
+											<SubTitle>
+												<Name>{list?.name?.substring(0, 25)}</Name>
+												<IoBookmarkOutline
+													size={20}
+													onClick={(e) => {
+														e.stopPropagation();
+														toast.error("Please login to save recipe");
+													}}
+												/>
+											</SubTitle>
+											<Span>{list?.updatedAt?.substring(0, 10)}</Span>
+										</Div>
+									</Recipe>
+								))}
+							</>
 						)}
 					</>
 				</ChineseRecipesInnerContainer>

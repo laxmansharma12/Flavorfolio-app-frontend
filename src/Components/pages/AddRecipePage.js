@@ -343,17 +343,17 @@ const AddRecipePage = () => {
 	const handleAddRecipe = async (e) => {
 		e.preventDefault();
 		try {
-			const productData = new FormData();
-			productData.append("name", name);
-			productData.append("description", description);
-			productData.append("ingredients", ingredients);
-			productData.append("steps", steps);
-			productData.append("photo", photo);
-			productData.append("userId", userId._id);
-			productData.append("category", category);
+			const RecipeData = new FormData();
+			RecipeData.append("name", name);
+			RecipeData.append("description", description);
+			RecipeData.append("ingredients", ingredients);
+			RecipeData.append("steps", steps);
+			RecipeData.append("photo", photo);
+			RecipeData.append("userId", userId._id);
+			RecipeData.append("category", category);
 			const { data } = await axios.post(
 				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/create-food`,
-				productData
+				RecipeData
 			);
 			if (data) {
 				toast.success(data.message);

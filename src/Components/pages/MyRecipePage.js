@@ -142,6 +142,9 @@ const H1 = styled.h1``;
 const Section = styled.div`
 	.select-category {
 		width: 160px;
+		color: #000;
+		border: 1px solid rgb(66, 64, 64);
+		border-radius: 10px;
 	}
 `;
 const RadioGroup = styled.div`
@@ -233,7 +236,7 @@ const MyRecipe = () => {
 							</Radio.Group>
 						</RadioGroup>
 						<SelectGroup>
-							<Select.Option
+							<Select
 								placeholder="Sort by category"
 								className="select-category"
 								size="large"
@@ -250,7 +253,7 @@ const MyRecipe = () => {
 										))}
 									</>
 								)}
-							</Select.Option>
+							</Select>
 						</SelectGroup>
 					</Section>
 					<L>Total Recipes: {recipesListArray.length}</L>
