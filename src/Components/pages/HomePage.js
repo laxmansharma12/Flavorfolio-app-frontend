@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "../Layouts/Layout";
 import SearchImgSpice from "../images/spices.png";
 import SearchImgFood from "../images/food1.png";
@@ -10,6 +10,7 @@ import MexicoImg from "../images/mexico-pyramid.png";
 import ChinaImg from "../images/chinese.png";
 import OtherImg from "../images/other.png";
 import { Link } from "react-router-dom";
+import RecentRecipes from "../carousels/RecentRecipes";
 
 const CategoryBanner = styled.div`
 	background-color: rgb(243, 243, 243);
@@ -62,7 +63,7 @@ const Category = styled.div`
 		width: 100px;
 	}
 `;
-const Img = styled.img`
+const CategoryIcons = styled.img`
 	background-color: rgb(229, 231, 235);
 	border-radius: 50%;
 	padding: 15px;
@@ -80,10 +81,33 @@ const CategoryName = styled.label`
 	font-weight: 500;
 `;
 
+const LatestContainer = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`;
+const LatestInnerContainer = styled.div`
+	display: flex;
+	align-items: start;
+	flex-direction: column;
+	width: 100%;
+	max-width: 1300px;
+	margin: 0 20px 10px;
+`;
+const LatestTitle = styled.h2`
+	margin-bottom: 10px;
+	@media (max-width: 1320px) {
+		margin-left: 10px;
+	}
+	@media (max-width: 640px) {
+		margin-left: 20px;
+	}
+`;
+
 const Home = () => {
-	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, []);
+	// useEffect(() => {
+	// 	window.scrollTo(0, 0);
+	// }, []);
 
 	return (
 		<Layout>
@@ -109,42 +133,49 @@ const Home = () => {
 				<CategoryBannerInner>
 					<Link className="link" to={"/indian"}>
 						<Category>
-							<Img src={IndImg}></Img>
+							<CategoryIcons src={IndImg} />
 							<CategoryName>Indian</CategoryName>
 						</Category>
 					</Link>
 					<Link className="link" to={"/thai"}>
 						<Category>
-							<Img src={ThaiImg}></Img>
+							<CategoryIcons src={ThaiImg} />
 							<CategoryName>Thai</CategoryName>
 						</Category>
 					</Link>
 					<Link className="link" to={"/american"}>
 						<Category>
-							<Img src={AmericaImg}></Img>
+							<CategoryIcons src={AmericaImg} />
 							<CategoryName>American</CategoryName>
 						</Category>
 					</Link>
 					<Link className="link" to={"/chinese"}>
 						<Category>
-							<Img src={ChinaImg}></Img>
+							<CategoryIcons src={ChinaImg} />
 							<CategoryName>Chinese</CategoryName>
 						</Category>
 					</Link>
 					<Link className="link" to={"Mexican"}>
 						<Category>
-							<Img src={MexicoImg}></Img>
+							<CategoryIcons src={MexicoImg} />
 							<CategoryName>Mexican</CategoryName>
 						</Category>
 					</Link>
 					<Link className="link" to={"/other"}>
 						<Category>
-							<Img src={OtherImg}></Img>
+							<CategoryIcons src={OtherImg} />
 							<CategoryName>Other</CategoryName>
 						</Category>
 					</Link>
 				</CategoryBannerInner>
 			</CategoryBanner>
+
+			<LatestContainer>
+				<LatestInnerContainer>
+					<LatestTitle>Latest Recipes</LatestTitle>
+					<RecentRecipes />
+				</LatestInnerContainer>
+			</LatestContainer>
 		</Layout>
 	);
 };
