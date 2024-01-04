@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Layout } from "../Layouts/Layout";
 import SearchImgSpice from "../images/spices.png";
 import SearchImgFood from "../images/food1.png";
+import CookingImg1 from "../images/woman-cooking.jpg";
+import CookingImg2 from "../images/couple-cooking.jpg";
+import CookingImg3 from "../images/man-cooking.jpg";
 import styled from "styled-components";
 import IndImg from "../images/gate-of-india.png";
 import AmericaImg from "../images/statue-of-liberty.png";
@@ -11,13 +14,17 @@ import ChinaImg from "../images/chinese.png";
 import OtherImg from "../images/other.png";
 import { Link } from "react-router-dom";
 import RecentRecipes from "../carousels/RecentRecipes";
+import IndianRecipes from "../carousels/IndianRecipes";
+import ChineseRecipes from "../carousels/ChineseRecipes";
+import AmericanRecipes from "../carousels/AmericanRecipes";
+import MexicanRecipes from "../carousels/MexicanRecipes";
 
 const CategoryBanner = styled.div`
 	background-color: rgb(243, 243, 243);
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	padding: 30px 0;
+	padding: 10px 0;
 `;
 const CategoryBannerInner = styled.div`
 	display: flex;
@@ -50,8 +57,8 @@ const Category = styled.div`
 	gap: 10px;
 	height: 150px;
 	width: 150px;
-	transition: all 0.2s ease-in-out !important;
 	cursor: pointer;
+	transition: all 0.2s ease-in-out !important;
 	&:hover {
 		transform: scale(1.05);
 		transition: all 0.5s ease-in-out;
@@ -67,8 +74,8 @@ const CategoryIcons = styled.img`
 	background-color: rgb(229, 231, 235);
 	border-radius: 50%;
 	padding: 15px;
-	height: 70%;
-	width: 70%;
+	height: 50%;
+	width: 50%;
 	&:hover {
 		box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 	}
@@ -81,12 +88,13 @@ const CategoryName = styled.label`
 	font-weight: 500;
 `;
 
-const LatestContainer = styled.div`
+const RecipesContainer = styled.div`
 	display: flex;
 	justify-content: center;
+	flex-direction: column;
 	align-items: center;
 `;
-const LatestInnerContainer = styled.div`
+const RecipesInnerContainer = styled.div`
 	display: flex;
 	align-items: start;
 	flex-direction: column;
@@ -94,10 +102,13 @@ const LatestInnerContainer = styled.div`
 	max-width: 1300px;
 	margin: 0 20px 10px;
 `;
-const LatestTitle = styled.h2`
-	margin-bottom: 10px;
+const RecipesTitle = styled.h2`
+	margin-bottom: 5px;
+	@media (min-width: 1320px) {
+		margin-left: 0.6%;
+	}
 	@media (max-width: 1320px) {
-		margin-left: 10px;
+		margin-left: 6%;
 	}
 	@media (max-width: 640px) {
 		margin-left: 20px;
@@ -170,17 +181,144 @@ const Home = () => {
 				</CategoryBannerInner>
 			</CategoryBanner>
 
-			<LatestContainer>
-				<LatestInnerContainer>
-					<LatestTitle>Latest Recipes</LatestTitle>
+			<RecipesContainer>
+				<RecipesInnerContainer>
+					<RecipesTitle>Latest Recipes</RecipesTitle>
 					<RecentRecipes />
-				</LatestInnerContainer>
-			</LatestContainer>
+				</RecipesInnerContainer>
+				<RecipesInnerContainer>
+					<RecipesTitle>Indian Recipes</RecipesTitle>
+					<IndianRecipes />
+				</RecipesInnerContainer>
+				<RecipesInnerContainer>
+					<RecipesTitle>Chinese Recipes</RecipesTitle>
+					<ChineseRecipes />
+				</RecipesInnerContainer>
+				<RecipesInnerContainer>
+					<RecipesTitle>Mexican Recipes</RecipesTitle>
+					<MexicanRecipes />
+				</RecipesInnerContainer>
+				<RecipesInnerContainer>
+					<RecipesTitle>American Recipes</RecipesTitle>
+					<AmericanRecipes />
+				</RecipesInnerContainer>
+			</RecipesContainer>
+			<PublishRecipeContainer>
+				<PublishRecipeInnerContainer>
+					<ImagesSection>
+						<Img1 src={CookingImg1} />
+						<Img2 src={CookingImg2} />
+						<Img3 src={CookingImg3} />
+					</ImagesSection>
+					<H1>Publish your recipe for FREE today</H1>
+					<P>Publish your Recipe in front of thousands of people for free.</P>
+					<Link className="addbtn" to={"/addrecipe"}>
+						Submit Recipe
+					</Link>
+				</PublishRecipeInnerContainer>
+			</PublishRecipeContainer>
 		</Layout>
 	);
 };
 
 export default Home;
+
+const PublishRecipeContainer = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	@media (max-width: 640px) {
+		width: 100%;
+	}
+`;
+const PublishRecipeInnerContainer = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	padding: 60px 0;
+	.addbtn {
+		background-color: #000;
+		color: #fff;
+		text-decoration: none;
+		font-weight: 700;
+		border: none;
+		border-radius: 5px;
+		padding: 10px;
+		margin-top: 10px;
+		letter-spacing: 0.5px;
+		&:hover {
+			background-color: rgb(21, 20, 20);
+		}
+		@media (max-width: 640px) {
+			padding: 5px 10px;
+			font-weight: 500;
+			margin-top: 20px;
+		}
+	}
+	@media (max-width: 640px) {
+		width: 90%;
+		text-align: center;
+		padding-bottom: 30px;
+	}
+`;
+
+const ImagesSection = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: row;
+	gap: 40px;
+	@media (max-width: 640px) {
+		width: 100%;
+		gap: 20px;
+	}
+`;
+const Img1 = styled.img`
+	object-fit: cover;
+	height: 170px;
+	width: 170px;
+	border-radius: 70% 30% 30% 70%/60% 40% 60% 40%;
+	@media (max-width: 640px) {
+		height: 70px;
+		width: 70px;
+	}
+`;
+const Img2 = styled.img`
+	object-fit: cover;
+	height: 220px;
+	width: 220px;
+	border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+	@media (max-width: 640px) {
+		height: 120px;
+		width: 120px;
+	}
+`;
+const Img3 = styled.img`
+	object-fit: cover;
+	height: 170px;
+	width: 170px;
+	border-radius: 30% 70% 70% 30%/30% 57% 43% 70%;
+	@media (max-width: 640px) {
+		height: 70px;
+		width: 70px;
+	}
+`;
+const H1 = styled.h1`
+	font-size: 40px;
+	margin: 10px 0;
+	@media (max-width: 640px) {
+		font-size: 30px;
+	}
+`;
+const P = styled.label`
+	font-size: 18px;
+	@media (max-width: 640px) {
+		font-size: 15px;
+		padding: 0 18px;
+	}
+`;
 
 const SearchContainer = styled.div`
 	background-color: rgb(0, 61, 17);
@@ -311,10 +449,9 @@ const ExploreButton = styled.a`
 	cursor: pointer;
 	font-size: 20px;
 	font-weight: 600;
-	transition: all 0.2s ease-in-out !important;
 	background-color: rgb(5, 163, 49);
 	border: none;
-
+	transition: all 0.2s ease-in-out !important;
 	&:hover {
 		transform: scale(1.05);
 		transition: all 0.4s ease-in-out;

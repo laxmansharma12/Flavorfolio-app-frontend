@@ -7,34 +7,30 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const RecentRecipesContainer = styled.div`
+const RecipesContainer = styled.div`
 	width: 100%;
 	margin: auto;
 	@media (max-width: 1320px) {
 		width: 90%;
-	}
-	@media (max-width: 1135px) {
-		width: 75%;
 	}
 	.recipeLink {
 		text-decoration: none;
 		color: #000;
 	}
 `;
-const RecentRecipesInnerContainer = styled.div``;
+const RecipesInnerContainer = styled.div`
+	margin: 10px 0 10px 10px;
+	transition: all 0.3s ease-in-out !important;
+	&:hover {
+		transform: scale(1.05);
+		filter: brightness(1);
+	}
+`;
 
 const generateMediaQueries = (baseHeight, baseWidth) => {
 	const breakpoints = [
-		{ maxWidth: 998, height: 130, width: 210 },
-		{ maxWidth: 870, height: 130, width: 200 },
-		{ maxWidth: 845, height: 120, width: 190 },
-		{ maxWidth: 793, height: 115, width: 180 },
-		{ maxWidth: 744, height: 110, width: 170 },
-		{ maxWidth: 714, height: 105, width: 160 },
-		{ maxWidth: 669, height: 100, width: 150 },
-		{ maxWidth: 626, height: 90, width: 140 },
-		{ maxWidth: 583, height: 80, width: 130 },
-		{ maxWidth: 544, height: 80, width: 120 },
+		{ maxWidth: 1320, height: 130, width: 230 },
+		{ maxWidth: 640, height: 100, width: 155 },
 	];
 
 	return breakpoints
@@ -129,10 +125,11 @@ const RecentRecipes = () => {
 	}, [auth?.user]);
 
 	const settings = {
-		dots: true,
+		dots: false,
 		infinite: true,
 		speed: 1000,
 		autoplay: true,
+		arrows: false,
 		slidesToShow: 5,
 		slidesToScroll: 1,
 		initialSlide: 0,
@@ -170,10 +167,10 @@ const RecentRecipes = () => {
 		],
 	};
 	return (
-		<RecentRecipesContainer>
+		<RecipesContainer>
 			<Slider {...settings}>
 				{recipesListArray.map((list) => (
-					<RecentRecipesInnerContainer
+					<RecipesInnerContainer
 						key={list._id}
 						onClick={() => navigate(`/recipe/${list.slug}`)}
 					>
@@ -184,10 +181,10 @@ const RecentRecipes = () => {
 						<Div>
 							<Name>{list.name.substring(0, 17)}</Name>
 						</Div>
-					</RecentRecipesInnerContainer>
+					</RecipesInnerContainer>
 				))}
 			</Slider>
-		</RecentRecipesContainer>
+		</RecipesContainer>
 	);
 };
 
