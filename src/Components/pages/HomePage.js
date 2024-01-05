@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Layout } from "../Layouts/Layout";
 import SearchImgSpice from "../images/spices.png";
 import SearchImgFood from "../images/food1.png";
@@ -17,7 +17,6 @@ import RecentRecipes from "../carousels/RecentRecipes";
 import IndianRecipes from "../carousels/IndianRecipes";
 import ChineseRecipes from "../carousels/ChineseRecipes";
 import AmericanRecipes from "../carousels/AmericanRecipes";
-import MexicanRecipes from "../carousels/MexicanRecipes";
 
 const CategoryBanner = styled.div`
 	background-color: rgb(243, 243, 243);
@@ -193,10 +192,6 @@ const Home = () => {
 				<RecipesInnerContainer>
 					<RecipesTitle>Chinese Recipes</RecipesTitle>
 					<ChineseRecipes />
-				</RecipesInnerContainer>
-				<RecipesInnerContainer>
-					<RecipesTitle>Mexican Recipes</RecipesTitle>
-					<MexicanRecipes />
 				</RecipesInnerContainer>
 				<RecipesInnerContainer>
 					<RecipesTitle>American Recipes</RecipesTitle>
