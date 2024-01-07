@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useAllRecipes } from "../../context/recipesProvider";
 
 const RecipesContainer = styled.div`
 	width: 100%;
@@ -86,16 +87,13 @@ const Div = styled.div`
 `;
 const IndianRecipes = () => {
 	const [recipesListArray, setRecipesListArray] = useState([]);
-	const [auth, setAuth] = useAuth();
+	const [recipes, setRecipes] = useAllRecipes();
 	const navigate = useNavigate();
 
 	//get all recipes
-	const GetMyRecipes = async () => {
+	const GetIndianRecipes = async () => {
 		try {
-			const { data } = await axios.get(
-				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-food`
-			);
-			const updatedRecipesListArray = data?.foods.filter(
+			const updatedRecipesListArray = recipes?.foods?.filter(
 				(list) => list?.category === "658061c3a2ae14d29540223f"
 			);
 			// Ensure only the first 4 elements are stored in recipesListArray
@@ -107,8 +105,8 @@ const IndianRecipes = () => {
 
 	//lifecycle method
 	useEffect(() => {
-		GetMyRecipes();
-	}, [auth?.user]);
+		GetIndianRecipes();
+	}, [recipes]);
 
 	const settings = {
 		dots: false,

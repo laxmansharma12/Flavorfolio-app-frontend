@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Layout } from "../Layouts/Layout";
 import styled from "styled-components";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Radio, Select } from "antd";
 import { useAuth } from "../../context/authProvider";
 import toast from "react-hot-toast";
+import { IoBookmarkOutline } from "react-icons/io5";
+import { IoBookmark } from "react-icons/io5";
 
 const Option = Select;
-const MyrecipesContainer = styled.div`
+const MySavedrecipesContainer = styled.div`
 	width: 100%;
 	background-color: rgb(243, 243, 243);
 	display: flex;
@@ -20,7 +22,7 @@ const MyrecipesContainer = styled.div`
 	}
 `;
 
-const MyRecipesInnerContainer = styled.div`
+const MySavedRecipesInnerContainer = styled.div`
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -78,6 +80,14 @@ const EmptyRecipes = styled.div`
 	.label {
 		font-size: 50px;
 	}
+`;
+
+const SubTitle = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	width: 93%;
 `;
 
 const L = styled.label`
@@ -162,8 +172,16 @@ const SavedRecipePage = () => {
 	const [recipesListArray, setRecipesListArray] = useState([]);
 	const [categories, setCategories] = useState([]);
 	const [category, setCategory] = useState("All");
+	const [userId, setUserId] = useState([]);
 	const [search, setSearch] = useState([]);
 	const [auth, setAuth] = useAuth();
+	const [showBookMarkControll, setShowBookMarkControll] = useState({});
+
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		setUserId(auth?.user);
+	}, [auth]);
 
 	//get all category
 	const getAllCategory = async () => {
@@ -216,9 +234,56 @@ const SavedRecipePage = () => {
 		window.scrollTo(0, 0);
 	}, []);
 
+	const handleSaveRecipe = async (e, recipe) => {
+		e.stopPropagation();
+
+		try {
+			const RecipeData = new FormData();
+			RecipeData.append("name", recipe.name);
+			RecipeData.append("_id", recipe._id);
+			RecipeData.append("description", recipe.description);
+			RecipeData.append("ingredients", recipe.ingredients);
+			RecipeData.append("steps", recipe.steps);
+			RecipeData.append("photo", recipe.photo);
+			RecipeData.append("userId", userId._id);
+			RecipeData.append("category", recipe.category);
+			const { data } = await axios.post(
+				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/save-recipe`,
+				RecipeData
+			);
+			if (data.success) {
+				toast.success(data.message);
+			} else {
+				toast.error(data.message);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const handleDeleteSavedRecipe = async (e, id) => {
+		e.stopPropagation();
+		try {
+			const res = await axios.delete(
+				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/delete-recipe/${id}`
+			);
+			toast.success(res?.data?.message);
+		} catch (error) {
+			console.log(error);
+			toast.error("Something went wrong");
+		}
+	};
+
+	const toggleBookMark = (recipeId) => {
+		setShowBookMarkControll((prevSaveRecipes) => ({
+			...prevSaveRecipes,
+			[recipeId]: !prevSaveRecipes[recipeId],
+		}));
+	};
+
 	return (
 		<Layout title={"My-savedRecipes"}>
-			<MyrecipesContainer>
+			<MySavedrecipesContainer>
 				<Title>
 					<H1>My saved recipes</H1>
 					<Section>
@@ -263,7 +328,7 @@ const SavedRecipePage = () => {
 					<L>Total Recipes: {recipesListArray.length}</L>
 				</Title>
 
-				<MyRecipesInnerContainer>
+				<MySavedRecipesInnerContainer>
 					<>
 						{auth?.user ? (
 							<>
@@ -272,26 +337,45 @@ const SavedRecipePage = () => {
 										{category === "All" ? (
 											<>
 												{recipesListArray.map((list) => (
-													<Link
-														className="recipeLink"
+													<Recipe
 														key={list._id}
-														to={`/recipe/${list.slug}`}
-														style={{
-															height: "fit-content",
-															width: "fit-content",
+														onClick={() => {
+															navigate(`/recipe/${list.slug}`);
 														}}
 													>
-														<Recipe>
-															<Img
-																src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
-																alt="Recipe Photo"
-															></Img>
-															<Div>
-																<Name>{list.name.substring(0, 25)}</Name>
-																<Span>{list.updatedAt.substring(0, 10)}</Span>
-															</Div>
-														</Recipe>
-													</Link>
+														<Img
+															src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
+															alt="Recipe Photo"
+														></Img>
+														<Div>
+															<SubTitle>
+																<Name>{list?.name?.substring(0, 25)}</Name>
+																{!showBookMarkControll[list._id] && (
+																	<IoBookmark
+																		size={20}
+																		color="grey"
+																		onClick={(e) => {
+																			e.stopPropagation();
+																			handleDeleteSavedRecipe(e, list._id);
+																			toggleBookMark(list._id);
+																		}}
+																	/>
+																)}
+
+																{showBookMarkControll[list._id] && (
+																	<IoBookmarkOutline
+																		size={20}
+																		onClick={(e) => {
+																			e.stopPropagation();
+																			toggleBookMark(list._id);
+																			handleSaveRecipe(e, list);
+																		}}
+																	/>
+																)}
+															</SubTitle>
+															<Span>{list.updatedAt.substring(0, 10)}</Span>
+														</Div>
+													</Recipe>
 												))}
 											</>
 										) : (
@@ -299,26 +383,45 @@ const SavedRecipePage = () => {
 												{search.length !== 0 ? (
 													<>
 														{search.map((s) => (
-															<Link
-																className="recipeLink"
+															<Recipe
 																key={s._id}
-																to={`/recipe/${s.slug}`}
-																style={{
-																	height: "fit-content",
-																	width: "fit-content",
+																onClick={() => {
+																	navigate(`/recipe/${s.slug}`);
 																}}
 															>
-																<Recipe>
-																	<Img
-																		src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${s._id}`}
-																		alt="Recipe Photo"
-																	></Img>
-																	<Div>
-																		<Name>{s.name.substring(0, 25)}</Name>
-																		<Span>{s.updatedAt.substring(0, 10)}</Span>
-																	</Div>
-																</Recipe>
-															</Link>
+																<Img
+																	src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${s._id}`}
+																	alt="Recipe Photo"
+																></Img>
+																<Div>
+																	<SubTitle>
+																		<Name>{s?.name?.substring(0, 25)}</Name>
+																		{!showBookMarkControll[s._id] && (
+																			<IoBookmark
+																				size={20}
+																				color="grey"
+																				onClick={(e) => {
+																					e.stopPropagation();
+																					handleDeleteSavedRecipe(e, s._id);
+																					toggleBookMark(s._id);
+																				}}
+																			/>
+																		)}
+
+																		{showBookMarkControll[s._id] && (
+																			<IoBookmarkOutline
+																				size={20}
+																				onClick={(e) => {
+																					e.stopPropagation();
+																					toggleBookMark(s._id);
+																					handleSaveRecipe(e, s);
+																				}}
+																			/>
+																		)}
+																	</SubTitle>
+																	<Span>{s.updatedAt.substring(0, 10)}</Span>
+																</Div>
+															</Recipe>
 														))}
 													</>
 												) : (
@@ -352,8 +455,8 @@ const SavedRecipePage = () => {
 							</EmptyRecipes>
 						)}
 					</>
-				</MyRecipesInnerContainer>
-			</MyrecipesContainer>
+				</MySavedRecipesInnerContainer>
+			</MySavedrecipesContainer>
 		</Layout>
 	);
 };

@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { Radio, Select } from "antd";
 import { useAuth } from "../../context/authProvider";
 import toast from "react-hot-toast";
+import { useAllRecipes } from "../../context/recipesProvider";
 
 const Option = Select;
 const MyrecipesContainer = styled.div`
@@ -164,6 +165,7 @@ const MyRecipe = () => {
 	const [category, setCategory] = useState("All");
 	const [search, setSearch] = useState([]);
 	const [auth, setAuth] = useAuth();
+	const [recipes, setRecipes] = useAllRecipes();
 
 	//get all category
 	const getAllCategory = async () => {
