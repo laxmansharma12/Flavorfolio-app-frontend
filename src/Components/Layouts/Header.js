@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Link as LinkR, useLocation } from "react-router-dom";
+import {
+	Link,
+	Link as LinkR,
+	useLocation,
+	useNavigate,
+} from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 import toast from "react-hot-toast";
@@ -89,6 +94,17 @@ const NavItems = styled.ul`
 	@media screen and (max-width: 1120px) {
 		display: none;
 	}
+	.home {
+		color: rgb(221, 216, 216);
+		font-weight: 500;
+		text-decoration: none;
+		padding-top: 10px;
+		cursor: pointer;
+		transition: all 0.2s ease-in-out;
+		&:hover {
+			color: #fff;
+		}
+	}
 `;
 
 const NavLink = styled.a`
@@ -98,7 +114,6 @@ const NavLink = styled.a`
 	padding-top: 10px;
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
-	text-decoration: none;
 	&:hover {
 		color: #fff;
 	}
@@ -233,7 +248,7 @@ const Header = () => {
 	const [bars, setBars] = useState(true);
 	const [cross, setCross] = useState(false);
 	const location = useLocation();
-
+	const navigate = useNavigate();
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (
@@ -260,15 +275,28 @@ const Header = () => {
 		localStorage.removeItem("auth");
 		window.location.reload();
 	};
-	useEffect(() => {});
 	return (
 		<Nav>
 			<NavContainer>
 				<LeftSection>
 					<NavLogo to="/">Flavorfolio</NavLogo>
 					<NavItems>
-						{location.pathname !== "/" && <NavLink href="/">Home</NavLink>}
-						<NavLink href="/addrecipe">AddRecipe</NavLink>
+						{location.pathname !== "/" && (
+							<Link className="home" to={"/"}>
+								Home
+							</Link>
+						)}
+						<NavLink
+							onClick={() => {
+								{
+									auth?.user
+										? navigate("/addrecipe")
+										: toast.error("Please Login To Add Recipe");
+								}
+							}}
+						>
+							AddRecipe
+						</NavLink>
 						<NavLink href="/myrecipe">MyRecipes</NavLink>
 						<NavLink href="/savedrecipe">SavedRecipes</NavLink>
 						<NavLink href="/contact">Contact</NavLink>

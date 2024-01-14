@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../context/authProvider";
-import axios from "axios";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useAllRecipes } from "../../context/recipesProvider";
 
 const RecipesContainer = styled.div`
 	width: 100%;
@@ -84,30 +83,32 @@ const Div = styled.div`
 		padding-bottom: 0;
 	}
 `;
+// ...
+
 const ChineseRecipes = () => {
 	const [recipesListArray, setRecipesListArray] = useState([]);
-	const [auth, setAuth] = useAuth();
+	const [recipes, setRecipes] = useAllRecipes();
 	const navigate = useNavigate();
 
-	//get all recipes
-	const GetMyRecipes = async () => {
+	// get all recipes
+	const GetChineseRecipes = async () => {
 		try {
-			const { data } = await axios.get(
-				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-food`
-			);
-			const updatedRecipesListArray = data?.foods.filter(
-				(list) => list?.category === "65806221a2ae14d295402249"
-			);
-			setRecipesListArray(updatedRecipesListArray.slice(0, 4));
+			if (recipes.foods) {
+				const updatedRecipesListArray = recipes.foods.filter(
+					(list) => list?.category === "65806221a2ae14d295402249"
+				);
+				// Update state with recipe data
+				setRecipesListArray(updatedRecipesListArray.slice(0, 4));
+			}
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 		}
 	};
 
-	//lifecycle method
+	// lifecycle method
 	useEffect(() => {
-		GetMyRecipes();
-	}, [auth?.user]);
+		GetChineseRecipes();
+	}, [recipes]);
 
 	const settings = {
 		dots: false,
@@ -134,6 +135,7 @@ const ChineseRecipes = () => {
 			},
 		],
 	};
+
 	return (
 		<RecipesContainer>
 			<Slider {...settings}>
@@ -142,10 +144,7 @@ const ChineseRecipes = () => {
 						key={list._id}
 						onClick={() => navigate(`/recipe/${list.slug}`)}
 					>
-						<Img
-							src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
-							alt="Recipe Photo"
-						></Img>
+						<Img src={list?.photo?.url} alt="Recipe Photo" />
 						<Div>
 							<Name>{list.name.substring(0, 17)}</Name>
 						</Div>

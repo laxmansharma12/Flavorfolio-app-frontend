@@ -7,6 +7,7 @@ import axios from "axios";
 import { useAuth } from "../../context/authProvider";
 import { Select } from "antd";
 import { CiImageOn } from "react-icons/ci";
+import SyncLoader from "react-spinners/SyncLoader";
 
 const { Option } = Select;
 
@@ -263,7 +264,37 @@ const InputField = styled.input`
 		box-shadow: none;
 	}
 `;
-
+const Loader = styled.div`
+	display: flex;
+	height: 92vh;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	background-color: rgb(233, 233, 233);
+	z-index: 1;
+	width: 880px;
+	animation: dissolveIn 1s ease-in-out;
+	@media (max-width: 640px) {
+		width: 95%;
+	}
+	@keyframes dissolveIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+`;
+const H2 = styled.h2`
+	margin: 0;
+	padding: 0;
+`;
+const P = styled.p`
+	margin: 0 0 15px 0;
+	padding-top: 0px;
+`;
 const AddRecipePage = () => {
 	const [categories, setCategories] = useState([]);
 	const [auth, setAuth] = useAuth();
@@ -272,6 +303,7 @@ const AddRecipePage = () => {
 	const [category, setCategory] = useState();
 	const [photo, setPhoto] = useState("");
 	const [description, setDescription] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	useEffect(() => {
 		setUserId(auth?.user);
@@ -343,28 +375,34 @@ const AddRecipePage = () => {
 	const handleAddRecipe = async (e) => {
 		e.preventDefault();
 		try {
-			const RecipeData = new FormData();
-			RecipeData.append("name", name);
-			RecipeData.append("description", description);
-			RecipeData.append("ingredients", ingredients);
-			RecipeData.append("steps", steps);
-			RecipeData.append("photo", photo);
-			RecipeData.append("userId", userId._id);
-			RecipeData.append("category", category);
-			const { data } = await axios.post(
-				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/create-food`,
-				RecipeData
-			);
-			if (data) {
-				toast.success(data.message);
-				SetName("");
-				setDescription("");
-				setIngredients([""]);
-				setPhoto("");
-				setCategory();
-				setSteps([""]);
+			if (auth?.user) {
+				setIsSubmitting(true);
+				const RecipeData = new FormData();
+				RecipeData.append("name", name);
+				RecipeData.append("description", description);
+				RecipeData.append("ingredients", ingredients);
+				RecipeData.append("steps", steps);
+				RecipeData.append("photo", photo);
+				RecipeData.append("userId", userId._id);
+				RecipeData.append("category", category);
+				const { data } = await axios.post(
+					`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/create-food`,
+					RecipeData
+				);
+				if (data) {
+					setIsSubmitting(false);
+					toast.success(data.message);
+					SetName("");
+					setDescription("");
+					setIngredients([""]);
+					setPhoto("");
+					setCategory();
+					setSteps([""]);
+				} else {
+					toast.error(data.message);
+				}
 			} else {
-				toast.error(data.message);
+				toast.error("Please Login To Add Item");
 			}
 		} catch (error) {
 			console.log(error);
@@ -378,26 +416,47 @@ const AddRecipePage = () => {
 		<Layout title={"AddRecipe"}>
 			<AddRecipeContainer>
 				<AddRecipeInnerContainer>
-					<AddRecipeHeader>Add Recipe</AddRecipeHeader>
-					<PhotoControll>
-						{photo ? (
-							<>
-								{photo && photo.size < 1000000 ? (
+					{!isSubmitting && (
+						<>
+							<AddRecipeHeader>Add Recipe</AddRecipeHeader>
+
+							<PhotoControll>
+								{photo ? (
 									<>
-										<Img
-											src={URL.createObjectURL(photo)}
-											alt="Dish Photo"
-										></Img>
-										<ImgRemoveBtn onClick={() => setPhoto("")}>
-											Remove Image
-										</ImgRemoveBtn>
+										{photo && photo.size < 1000000 ? (
+											<>
+												<Img
+													src={URL.createObjectURL(photo)}
+													alt="Dish Photo"
+												></Img>
+												<ImgRemoveBtn onClick={() => setPhoto("")}>
+													Remove Image
+												</ImgRemoveBtn>
+											</>
+										) : (
+											<ImgContainer style={{ borderColor: "brown" }}>
+												<CiImageOn className="fileIcon" />
+												<br></br>
+												<L>Click to upload Photo</L>
+												<L style={{ color: "brown" }}>Size is more than 1mb</L>
+												<ImgInput
+													type="file"
+													name="photo"
+													accept="image/*"
+													onChange={(e) => setPhoto(e.target.files[0])}
+													hidden
+												></ImgInput>
+											</ImgContainer>
+										)}
 									</>
 								) : (
-									<ImgContainer style={{ borderColor: "brown" }}>
+									<ImgContainer>
 										<CiImageOn className="fileIcon" />
 										<br></br>
 										<L>Click to upload Photo</L>
-										<L style={{ color: "brown" }}>Size is more than 1mb</L>
+										<L style={{ fontSize: "12px" }}>
+											*Size: less than 1mb required
+										</L>
 										<ImgInput
 											type="file"
 											name="photo"
@@ -407,126 +466,121 @@ const AddRecipePage = () => {
 										></ImgInput>
 									</ImgContainer>
 								)}
-							</>
-						) : (
-							<ImgContainer>
-								<CiImageOn className="fileIcon" />
-								<br></br>
-								<L>Click to upload Photo</L>
-								<L style={{ fontSize: "12px" }}>
-									*Size: less than 1mb required
-								</L>
-								<ImgInput
-									type="file"
-									name="photo"
-									accept="image/*"
-									onChange={(e) => setPhoto(e.target.files[0])}
-									hidden
-								></ImgInput>
-							</ImgContainer>
-						)}
-					</PhotoControll>
-					<InputDataControll>
-						<Form onSubmit={handleAddRecipe}>
-							<Section>
-								<L htmlFor="dish-name">Category</L>
-								<Select
-									placeholder="Select a category"
-									size="large"
-									bordered={false}
-									className="select-category"
-									onChange={(value) => {
-										setCategory(value);
-									}}
-									value={category}
-								>
-									{auth.user && (
-										<>
-											{categories?.map((c) => (
-												<Option key={c._id} value={c._id} required>
-													{c.name ? c.name : ""}
-												</Option>
-											))}
-										</>
-									)}
-								</Select>
-							</Section>
-							<Section>
-								<L htmlFor="dish-name">Dish name</L>
-								<Input
-									className="form-control"
-									type="text"
-									value={name}
-									// placeholder="Enter dish name"
-									onChange={(e) => SetName(e.target.value)}
-									required
-								></Input>
-							</Section>
-							<Section>
-								<L htmlFor="description">Description</L>
-								<TextAreaDesc
-									className="form-control"
-									type="text"
-									value={description}
-									// placeholder="Enter description"
-									onChange={(e) => setDescription(e.target.value)}
-									required
-								></TextAreaDesc>
-							</Section>
-							<Section>
-								<L htmlFor="ingredients">Ingredients</L>
-								{ingredients.map((value, index) => (
-									<Div key={index}>
-										<SubDiv>
-											<InputField
-												type="text"
-												value={value}
-												onChange={(e) =>
-													handleEditIngredient(index, e.target.value)
-												}
-												required
-											/>
-											{ingredients.length !== 1 && (
-												<IngredientRemoveBtn
-													onClick={() => handleRemoveIngredient(index)}
-												>
-													Remove
-												</IngredientRemoveBtn>
+							</PhotoControll>
+							<InputDataControll>
+								<Form onSubmit={handleAddRecipe}>
+									<Section>
+										<L htmlFor="dish-name">Category</L>
+										<Select
+											placeholder="Select a category"
+											size="large"
+											bordered={false}
+											className="select-category"
+											onChange={(value) => {
+												setCategory(value);
+											}}
+											value={category}
+										>
+											{auth.user && (
+												<>
+													{categories?.map((c) => (
+														<Option key={c._id} value={c._id} required>
+															{c.name ? c.name : ""}
+														</Option>
+													))}
+												</>
 											)}
-										</SubDiv>
-									</Div>
-								))}
-								{/* Button to add a new input field */}
-								<AddIngredientBtn onClick={handleAddIngredient}>
-									+Ingredient
-								</AddIngredientBtn>
-							</Section>
-							<Section>
-								<L htmlFor="steps">Steps</L>
-								{steps.map((value, index) => (
-									<Div key={index}>
-										<SubDiv>
-											<InputField
-												type="text"
-												value={value}
-												onChange={(e) => handleEditStep(index, e.target.value)}
-												required
-											/>
-											{steps.length !== 1 && (
-												<StepRemoveBtn onClick={() => handleRemoveStep(index)}>
-													Remove
-												</StepRemoveBtn>
-											)}
-										</SubDiv>
-									</Div>
-								))}
-								{/* Button to add a new input field */}
-								<AddStepBtn onClick={handleAddStep}>+Step</AddStepBtn>
-							</Section>
-							<Button type="submit">Add Recipe</Button>
-						</Form>
-					</InputDataControll>
+										</Select>
+									</Section>
+									<Section>
+										<L htmlFor="dish-name">Dish name</L>
+										<Input
+											className="form-control"
+											type="text"
+											value={name}
+											// placeholder="Enter dish name"
+											onChange={(e) => SetName(e.target.value)}
+											required
+										></Input>
+									</Section>
+									<Section>
+										<L htmlFor="description">Description</L>
+										<TextAreaDesc
+											className="form-control"
+											type="text"
+											value={description}
+											// placeholder="Enter description"
+											onChange={(e) => setDescription(e.target.value)}
+											required
+										></TextAreaDesc>
+									</Section>
+									<Section>
+										<L htmlFor="ingredients">Ingredients</L>
+										{ingredients.map((value, index) => (
+											<Div key={index}>
+												<SubDiv>
+													<InputField
+														type="text"
+														value={value}
+														onChange={(e) =>
+															handleEditIngredient(index, e.target.value)
+														}
+														required
+													/>
+													{ingredients.length !== 1 && (
+														<IngredientRemoveBtn
+															onClick={() => handleRemoveIngredient(index)}
+														>
+															Remove
+														</IngredientRemoveBtn>
+													)}
+												</SubDiv>
+											</Div>
+										))}
+										{/* Button to add a new input field */}
+										<AddIngredientBtn onClick={handleAddIngredient}>
+											+Ingredient
+										</AddIngredientBtn>
+									</Section>
+									<Section>
+										<L htmlFor="steps">Steps</L>
+										{steps.map((value, index) => (
+											<Div key={index}>
+												<SubDiv>
+													<InputField
+														type="text"
+														value={value}
+														onChange={(e) =>
+															handleEditStep(index, e.target.value)
+														}
+														required
+													/>
+													{steps.length !== 1 && (
+														<StepRemoveBtn
+															onClick={() => handleRemoveStep(index)}
+														>
+															Remove
+														</StepRemoveBtn>
+													)}
+												</SubDiv>
+											</Div>
+										))}
+										{/* Button to add a new input field */}
+										<AddStepBtn onClick={handleAddStep}>+Step</AddStepBtn>
+									</Section>
+									<Button type="submit">Add Recipe</Button>
+								</Form>
+							</InputDataControll>
+						</>
+					)}
 				</AddRecipeInnerContainer>
+				{isSubmitting && (
+					<Loader>
+						<H2>Hold on a moment...</H2>
+						<P>We're adding your delicious recipe.</P>
+						<SyncLoader color="#000" />
+					</Loader>
+				)}
 			</AddRecipeContainer>
 		</Layout>
 	);

@@ -269,7 +269,7 @@ const UpdateRecipe = () => {
 	const [categories, setCategories] = useState([]);
 	const [auth, setAuth] = useAuth();
 	const [name, SetName] = useState("");
-	const [id, setId] = useState("");
+	const [photoId, setPhotoId] = useState("");
 	const [userId, setUserId] = useState([]);
 	const [category, setCategory] = useState("");
 	const [photo, setPhoto] = useState("");
@@ -288,7 +288,7 @@ const UpdateRecipe = () => {
 				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-food/${params.slug}`
 			);
 			SetName(data.food.name);
-			setId(data?.food._id);
+			setPhotoId(data?.food?.photo?.url);
 			setFid(data?.food._id);
 			setDescription(data.food.description);
 			setCategory(data?.food?.category._id);
@@ -403,7 +403,6 @@ const UpdateRecipe = () => {
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
-
 	return (
 		<Layout title={"update-recipe"}>
 			<AddRecipeContainer>
@@ -422,7 +421,7 @@ const UpdateRecipe = () => {
 											<ImgRemoveBtn
 												onClick={() => {
 													setPhoto("");
-													setId("");
+													setPhotoId("");
 												}}
 											>
 												Remove Image
@@ -446,20 +445,17 @@ const UpdateRecipe = () => {
 								</>
 							) : (
 								<>
-									{id && (
+									{photoId && (
 										<>
-											<Img
-												src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${id}`}
-												alt="recipe_photo"
-											/>
-											<ImgRemoveBtn onClick={() => setId("")}>
+											<Img src={photoId} alt="recipe_photo" />
+											<ImgRemoveBtn onClick={() => setPhotoId("")}>
 												Remove Image
 											</ImgRemoveBtn>
 										</>
 									)}
 								</>
 							)}
-							{!id && (
+							{!photoId && (
 								<ImgContainer>
 									<CiImageOn className="fileIcon" />
 									<br></br>
@@ -473,7 +469,7 @@ const UpdateRecipe = () => {
 										accept="image/*"
 										onChange={(e) => {
 											setPhoto(e.target.files[0]);
-											setId("id");
+											setPhotoId("id");
 										}}
 										hidden
 									></ImgInput>
@@ -577,7 +573,7 @@ const UpdateRecipe = () => {
 								{/* Button to add a new input field */}
 								<AddStepBtn onClick={handleAddStep}>+Step</AddStepBtn>
 							</Section>
-							<Button type="submit">Add Recipe</Button>
+							<Button type="submit">Update Recipe</Button>
 						</Form>
 					</InputDataControll>
 				</AddRecipeInnerContainer>

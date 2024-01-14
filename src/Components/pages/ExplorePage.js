@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
-
+import { useAllRecipes } from "../../context/recipesProvider";
 const Option = Select;
 const MyrecipesContainer = styled.div`
 	width: 100%;
@@ -177,6 +177,7 @@ const ExplorePage = () => {
 	const [category, setCategory] = useState("All");
 	const [auth, setAuth] = useAuth();
 	const [userId, setUserId] = useState([]);
+	const [recipes, setRecipes] = useAllRecipes();
 	const [search, setSearch] = useState([]);
 	const [fetchedRecipes, setFetchedRecipes] = useState([]);
 	const navigate = useNavigate();
@@ -203,15 +204,10 @@ const ExplorePage = () => {
 
 	//get all recipes
 	const GetMyRecipes = async () => {
-		if (auth?.user) {
-			try {
-				const { data } = await axios.get(
-					`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-food`
-				);
-				setRecipesListArray(data?.foods);
-			} catch (error) {
-				console.log(error);
-			}
+		try {
+			setRecipesListArray(recipes);
+		} catch (error) {
+			console.log(error);
 		}
 	};
 
@@ -377,10 +373,7 @@ const ExplorePage = () => {
 											navigate(`/recipe/${list.slug}`);
 										}}
 									>
-										<Img
-											src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
-											alt="Recipe Photo"
-										></Img>
+										<Img src={list?.photo?.url} alt="Recipe Photo" />
 										<Div>
 											<SubTitle>
 												<Name>{list?.name?.substring(0, 25)}</Name>
@@ -418,10 +411,7 @@ const ExplorePage = () => {
 											navigate(`/recipe/${list.slug}`);
 										}}
 									>
-										<Img
-											src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
-											alt="Recipe Photo"
-										></Img>
+										<Img src={list?.photo?.url} alt="Recipe Photo" />
 										<Div>
 											<SubTitle>
 												<Name>{list?.name?.substring(0, 25)}</Name>
@@ -462,10 +452,7 @@ const ExplorePage = () => {
 											navigate(`/recipe/${list.slug}`);
 										}}
 									>
-										<Img
-											src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
-											alt="Recipe Photo"
-										></Img>
+										<Img src={list?.photo?.url} alt="Recipe Photo" />
 										<Div>
 											<SubTitle>
 												<Name>{list?.name?.substring(0, 25)}</Name>

@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSearch } from "../../context/searchProvider";
 import { Layout } from "../Layouts/Layout";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { IoBookmarkOutline } from "react-icons/io5";
+import { IoBookmark } from "react-icons/io5";
+import toast from "react-hot-toast";
+import { useAllFetchedRecipes } from "../../context/savedRecipesProvider";
+import axios from "axios";
+import { useAuth } from "../../context/authProvider";
 
 const SearchRecipeContainer = styled.div`
 	width: 100%;
@@ -30,10 +36,6 @@ const SearchRecipeInnerContainer = styled.div`
 	box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px,
 		rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px,
 		rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
-	.recipeLink {
-		text-decoration: none;
-		color: #000;
-	}
 	@media (max-width: 1320px) {
 		max-width: 970px;
 		justify-content: center;
@@ -114,8 +116,58 @@ const EmptyRecipes = styled.div`
 		font-size: 50px;
 	}
 `;
+const SubTitle = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	width: 93%;
+`;
+
 export const SearchPage = () => {
 	const [values, setValues] = useSearch();
+	const [userId, setUserId] = useState([]);
+	const [auth, setAuth] = useAuth();
+	const [showBookMarkControll, setShowBookMarkControll] = useState({});
+	const [fetchedRecipes, setFetchedRecipes] = useAllFetchedRecipes();
+
+	const navigate = useNavigate();
+
+	const handleSaveRecipe = async (e, recipe) => {
+		e.stopPropagation();
+		try {
+			if (auth?.user) {
+				const RecipeData = new FormData();
+				RecipeData.append("_id", recipe._id);
+				RecipeData.append("userId", userId);
+				const { data } = await axios.post(
+					`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/save-recipe`,
+					RecipeData
+				);
+				if (data.success) {
+					toggleBookMark(recipe._id);
+					toast.success(data.message);
+				} else {
+					toast.error(data.message);
+				}
+			} else {
+				toast.error("Please Login To Save");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+	const toggleBookMark = (recipeId) => {
+		setShowBookMarkControll((prevSaveRecipes) => ({
+			...prevSaveRecipes,
+			[recipeId]: !prevSaveRecipes[recipeId],
+		}));
+	};
+
+	useEffect(() => {
+		setUserId(auth?.user?._id);
+	}, [values]);
+
 	return (
 		<Layout title={"Search results"}>
 			<SearchRecipeContainer>
@@ -131,26 +183,65 @@ export const SearchPage = () => {
 					) : (
 						<>
 							{values?.results.map((list) => (
-								<Link
-									className="recipeLink"
+								<Recipe
 									key={list._id}
-									to={`/recipe/${list.slug}`}
-									style={{
-										height: "fit-content",
-										width: "fit-content",
+									onClick={() => {
+										navigate(`/recipe/${list.slug}`);
 									}}
 								>
-									<Recipe>
-										<Img
-											src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
-											alt="Recipe Photo"
-										></Img>
-										<Div>
-											<Name>{list.name.substring(0, 25)}</Name>
-											<Span>{list.updatedAt.substring(0, 10)}</Span>
-										</Div>
-									</Recipe>
-								</Link>
+									<Img src={list?.photo?.url} alt="Recipe Photo"></Img>
+									<Div>
+										<SubTitle>
+											<Name>{list?.name?.substring(0, 25)}</Name>
+											{fetchedRecipes.includes(list._id) ? (
+												<>
+													{!showBookMarkControll[list._id] && (
+														<IoBookmark
+															size={20}
+															color="grey"
+															onClick={(e) => {
+																e.stopPropagation();
+																handleSaveRecipe(e, list);
+															}}
+														/>
+													)}
+													{showBookMarkControll[list._id] && (
+														<IoBookmarkOutline
+															size={20}
+															onClick={(e) => {
+																e.stopPropagation();
+																handleSaveRecipe(e, list);
+															}}
+														/>
+													)}
+												</>
+											) : (
+												<>
+													{showBookMarkControll[list._id] && (
+														<IoBookmark
+															size={20}
+															color="grey"
+															onClick={(e) => {
+																e.stopPropagation();
+																handleSaveRecipe(e, list);
+															}}
+														/>
+													)}
+													{!showBookMarkControll[list._id] && (
+														<IoBookmarkOutline
+															size={20}
+															onClick={(e) => {
+																e.stopPropagation();
+																handleSaveRecipe(e, list);
+															}}
+														/>
+													)}
+												</>
+											)}
+										</SubTitle>
+										<Span>{list?.updatedAt?.substring(0, 10)}</Span>
+									</Div>
+								</Recipe>
 							))}
 						</>
 					)}

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../context/authProvider";
-import axios from "axios";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useAllRecipes } from "../../context/recipesProvider";
 
 const RecipesContainer = styled.div`
 	width: 100%;
@@ -86,19 +85,18 @@ const Div = styled.div`
 `;
 const AmericanRecipes = () => {
 	const [recipesListArray, setRecipesListArray] = useState([]);
-	const [auth, setAuth] = useAuth();
+	const [recipes, setRecipes] = useAllRecipes();
 	const navigate = useNavigate();
 
 	//get all recipes
-	const GetMyRecipes = async () => {
+	const GetAmericanRecipes = async () => {
 		try {
-			const { data } = await axios.get(
-				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-food`
-			);
-			const updatedRecipesListArray = data?.foods.filter(
-				(list) => list?.category === "65806212a2ae14d295402246"
-			);
-			setRecipesListArray(updatedRecipesListArray.slice(0, 4));
+			if (recipes.foods) {
+				const updatedRecipesListArray = recipes.foods.filter(
+					(list) => list?.category === "65806212a2ae14d295402246"
+				);
+				setRecipesListArray(updatedRecipesListArray.slice(0, 4));
+			}
 		} catch (error) {
 			console.log(error);
 		}
@@ -106,8 +104,8 @@ const AmericanRecipes = () => {
 
 	//lifecycle method
 	useEffect(() => {
-		GetMyRecipes();
-	}, [auth?.user]);
+		GetAmericanRecipes();
+	}, [recipes]);
 
 	const settings = {
 		dots: false,
@@ -141,10 +139,7 @@ const AmericanRecipes = () => {
 						key={list._id}
 						onClick={() => navigate(`/recipe/${list.slug}`)}
 					>
-						<Img
-							src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
-							alt="Recipe Photo"
-						></Img>
+						<Img src={list?.photo?.url} alt="Recipe Photo" />
 						<Div>
 							<Name>{list.name.substring(0, 17)}</Name>
 						</Div>

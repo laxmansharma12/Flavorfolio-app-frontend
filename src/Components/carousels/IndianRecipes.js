@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../context/authProvider";
-import axios from "axios";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
@@ -89,20 +87,19 @@ const IndianRecipes = () => {
 	const [recipesListArray, setRecipesListArray] = useState([]);
 	const [recipes, setRecipes] = useAllRecipes();
 	const navigate = useNavigate();
-
 	//get all recipes
-	const GetIndianRecipes = async () => {
+	const GetIndianRecipes = () => {
 		try {
 			const updatedRecipesListArray = recipes?.foods?.filter(
 				(list) => list?.category === "658061c3a2ae14d29540223f"
 			);
 			// Ensure only the first 4 elements are stored in recipesListArray
-			setRecipesListArray(updatedRecipesListArray.slice(0, 4));
+			if (updatedRecipesListArray)
+				setRecipesListArray(updatedRecipesListArray.slice(0, 4));
 		} catch (error) {
 			console.log(error);
 		}
 	};
-
 	//lifecycle method
 	useEffect(() => {
 		GetIndianRecipes();
@@ -141,10 +138,7 @@ const IndianRecipes = () => {
 						key={list._id}
 						onClick={() => navigate(`/recipe/${list.slug}`)}
 					>
-						<Img
-							src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
-							alt="Recipe Photo"
-						></Img>
+						<Img src={list.photo.url} alt="Recipe Photo" />
 						<Div>
 							<Name>{list.name.substring(0, 17)}</Name>
 						</Div>

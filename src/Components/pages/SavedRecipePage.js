@@ -8,6 +8,7 @@ import { useAuth } from "../../context/authProvider";
 import toast from "react-hot-toast";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
+import { useAllSavedRecipes } from "../../context/savedRecipesProvider";
 
 const Option = Select;
 const MySavedrecipesContainer = styled.div`
@@ -176,12 +177,13 @@ const SavedRecipePage = () => {
 	const [search, setSearch] = useState([]);
 	const [auth, setAuth] = useAuth();
 	const [showBookMarkControll, setShowBookMarkControll] = useState({});
+	const [fetchedRecipes, setFetchedRecipes] = useAllSavedRecipes();
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		setUserId(auth?.user);
-	}, [auth]);
+		setUserId(auth?.user?._id);
+	}, [auth?.user]);
 
 	//get all category
 	const getAllCategory = async () => {
@@ -200,20 +202,12 @@ const SavedRecipePage = () => {
 
 	//get all recipes
 	const GetMyRecipes = async () => {
-		if (auth?.user) {
-			try {
-				const { data } = await axios.get(
-					`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-savedRecipes`
-				);
-				const updatedRecipesListArray = data?.Recipes.filter(
-					(list) => list?.userId === auth?.user._id
-				);
-
-				// Set the new array to the state
-				setRecipesListArray(updatedRecipesListArray);
-			} catch (error) {
-				console.log(error);
+		try {
+			if (fetchedRecipes) {
+				setRecipesListArray(fetchedRecipes);
 			}
+		} catch (error) {
+			console.log(error);
 		}
 	};
 
@@ -221,7 +215,7 @@ const SavedRecipePage = () => {
 	useEffect(() => {
 		GetMyRecipes();
 		getAllCategory();
-	}, [auth?.user]);
+	}, [auth?.user, fetchedRecipes]);
 
 	useEffect(() => {
 		const updateSearchRecipes = recipesListArray.filter(
@@ -236,17 +230,10 @@ const SavedRecipePage = () => {
 
 	const handleSaveRecipe = async (e, recipe) => {
 		e.stopPropagation();
-
 		try {
 			const RecipeData = new FormData();
-			RecipeData.append("name", recipe.name);
 			RecipeData.append("_id", recipe._id);
-			RecipeData.append("description", recipe.description);
-			RecipeData.append("ingredients", recipe.ingredients);
-			RecipeData.append("steps", recipe.steps);
-			RecipeData.append("photo", recipe.photo);
-			RecipeData.append("userId", userId._id);
-			RecipeData.append("category", recipe.category);
+			RecipeData.append("userId", userId);
 			const { data } = await axios.post(
 				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/save-recipe`,
 				RecipeData
@@ -260,20 +247,6 @@ const SavedRecipePage = () => {
 			console.log(error);
 		}
 	};
-
-	const handleDeleteSavedRecipe = async (e, id) => {
-		e.stopPropagation();
-		try {
-			const res = await axios.delete(
-				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/delete-recipe/${id}`
-			);
-			toast.success(res?.data?.message);
-		} catch (error) {
-			console.log(error);
-			toast.error("Something went wrong");
-		}
-	};
-
 	const toggleBookMark = (recipeId) => {
 		setShowBookMarkControll((prevSaveRecipes) => ({
 			...prevSaveRecipes,
@@ -344,7 +317,7 @@ const SavedRecipePage = () => {
 														}}
 													>
 														<Img
-															src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
+															src={list?.photo?.url}
 															alt="Recipe Photo"
 														></Img>
 														<Div>
@@ -356,7 +329,7 @@ const SavedRecipePage = () => {
 																		color="grey"
 																		onClick={(e) => {
 																			e.stopPropagation();
-																			handleDeleteSavedRecipe(e, list._id);
+																			handleSaveRecipe(e, list);
 																			toggleBookMark(list._id);
 																		}}
 																	/>
@@ -373,7 +346,7 @@ const SavedRecipePage = () => {
 																	/>
 																)}
 															</SubTitle>
-															<Span>{list.updatedAt.substring(0, 10)}</Span>
+															<Span>{list?.updatedAt?.substring(0, 10)}</Span>
 														</Div>
 													</Recipe>
 												))}
@@ -390,7 +363,7 @@ const SavedRecipePage = () => {
 																}}
 															>
 																<Img
-																	src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${s._id}`}
+																	src={s?.photo?.url}
 																	alt="Recipe Photo"
 																></Img>
 																<Div>
@@ -402,7 +375,7 @@ const SavedRecipePage = () => {
 																				color="grey"
 																				onClick={(e) => {
 																					e.stopPropagation();
-																					handleDeleteSavedRecipe(e, s._id);
+																					handleSaveRecipe(e, s);
 																					toggleBookMark(s._id);
 																				}}
 																			/>
@@ -419,7 +392,7 @@ const SavedRecipePage = () => {
 																			/>
 																		)}
 																	</SubTitle>
-																	<Span>{s.updatedAt.substring(0, 10)}</Span>
+																	<Span>{s?.updatedAt?.substring(0, 10)}</Span>
 																</Div>
 															</Recipe>
 														))}

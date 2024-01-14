@@ -185,19 +185,12 @@ const MyRecipe = () => {
 	//get all recipes
 	const GetMyRecipes = async () => {
 		if (auth?.user) {
-			try {
-				const { data } = await axios.get(
-					`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-food`
-				);
-				const updatedRecipesListArray = data?.foods.filter(
-					(list) => list?.userId === auth?.user._id
-				);
+			const updatedRecipesListArray = recipes?.foods.filter(
+				(list) => list?.userId === auth?.user._id
+			);
 
-				// Set the new array to the state
-				setRecipesListArray(updatedRecipesListArray);
-			} catch (error) {
-				console.log(error);
-			}
+			// Set the new array to the state
+			setRecipesListArray(updatedRecipesListArray);
 		}
 	};
 
@@ -205,7 +198,7 @@ const MyRecipe = () => {
 	useEffect(() => {
 		GetMyRecipes();
 		getAllCategory();
-	}, [auth?.user]);
+	}, [recipes]);
 
 	useEffect(() => {
 		const updateSearchRecipes = recipesListArray.filter(
@@ -285,7 +278,7 @@ const MyRecipe = () => {
 													>
 														<Recipe>
 															<Img
-																src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
+																src={list?.photo?.url}
 																alt="Recipe Photo"
 															></Img>
 															<Div>
@@ -312,7 +305,7 @@ const MyRecipe = () => {
 															>
 																<Recipe>
 																	<Img
-																		src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${s._id}`}
+																		src={s?.photo?.url}
 																		alt="Recipe Photo"
 																	></Img>
 																	<Div>

@@ -9,6 +9,9 @@ import { FaRegQuestionCircle } from "react-icons/fa";
 import toast from "react-hot-toast";
 import styled from "styled-components";
 import { useAuth } from "../../context/authProvider";
+import { IoBookmarkOutline } from "react-icons/io5";
+import { IoBookmark } from "react-icons/io5";
+import { useAllFetchedRecipes } from "../../context/savedRecipesProvider";
 
 const RecipesDetailsContainer = styled.div`
 	width: 100%;
@@ -175,6 +178,16 @@ const DeleteBtn = styled.button`
 		background-color: rgb(229, 1, 1);
 	}
 `;
+const SaveRecipeBtn = styled.button`
+	padding: 10px 30px;
+	border: none;
+	background-color: rgb(206, 201, 201);
+	border-radius: 10px;
+	color: #fff;
+	&:hover {
+		background-color: rgb(222, 218, 218);
+	}
+`;
 
 const Desc = styled.p`
 	margin-top: 0.3rem;
@@ -250,7 +263,13 @@ const Div = styled.div`
 		padding: 0 0 10px 28px;
 	}
 `;
-
+const SubTitle = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	width: 93%;
+`;
 const Similar = styled.div`
 	width: 100%;
 	border-radius: 10px;
@@ -287,6 +306,8 @@ export const RecipeDetails = () => {
 	const navigate = useNavigate();
 	const [recipe, setRecipe] = useState({});
 	const [relatedRecipe, setRelatedRecipe] = useState([]);
+	const [fetchedRecipes, setFetchedRecipes] = useAllFetchedRecipes();
+	const [showBookMarkControll, setShowBookMarkControll] = useState({});
 
 	//initalp details
 	useEffect(() => {
@@ -316,6 +337,7 @@ export const RecipeDetails = () => {
 			console.log(error);
 		}
 	};
+
 	//delete a product
 	const handleDelete = async () => {
 		try {
@@ -331,6 +353,39 @@ export const RecipeDetails = () => {
 			toast.error("Something went wrong");
 		}
 	};
+
+	const toggleBookMark = (recipeId) => {
+		setShowBookMarkControll((prevSaveRecipes) => ({
+			...prevSaveRecipes,
+			[recipeId]: !prevSaveRecipes[recipeId],
+		}));
+	};
+
+	const handleSaveRecipe = async (e, recipe) => {
+		e.stopPropagation();
+		try {
+			if (auth?.user) {
+				const RecipeData = new FormData();
+				RecipeData.append("_id", recipe._id);
+				RecipeData.append("userId", auth?.user._id);
+				const { data } = await axios.post(
+					`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/save-recipe`,
+					RecipeData
+				);
+				if (data.success) {
+					toggleBookMark(recipe._id);
+					toast.success(data.message);
+				} else {
+					toast.error(data.message);
+				}
+			} else {
+				toast.error("Please Login To Save");
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
@@ -343,10 +398,7 @@ export const RecipeDetails = () => {
 					<Top>
 						<LeftSection>
 							{recipe._id && (
-								<Img
-									src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${recipe._id}`}
-									alt="Recipe Photo"
-								></Img>
+								<Img src={recipe?.photo?.url} alt="Recipe Photo"></Img>
 							)}
 						</LeftSection>
 						<RightSection>
@@ -361,27 +413,62 @@ export const RecipeDetails = () => {
 							<L style={{ margin: "10px 0" }}>
 								Created At: <Span>{recipe.updatedAt?.substring(0, 10)}</Span>
 							</L>
-							{auth?.user?._id === recipe?.userId || auth?.user?.role === 1 ? (
-								<ButtonController>
-									<EditBtn
-										onClick={() => {
-											navigate(`/update-recipe/${recipe.slug}`);
+
+							<ButtonController>
+								{auth?.user?._id === recipe?.userId ||
+								auth?.user?.role === 1 ? (
+									<>
+										<EditBtn
+											onClick={() => {
+												navigate(`/update-recipe/${recipe.slug}`);
+											}}
+										>
+											<FaEdit />
+										</EditBtn>
+										<DeleteBtn
+											onClick={() => {
+												setAskDelete(true);
+												setOk(recipe._id);
+											}}
+										>
+											<MdDelete />
+										</DeleteBtn>
+									</>
+								) : (
+									""
+								)}
+								{fetchedRecipes.includes(recipe._id) ? (
+									<SaveRecipeBtn
+										onClick={(e) => {
+											handleSaveRecipe(e, recipe);
 										}}
 									>
-										<FaEdit />
-									</EditBtn>
-									<DeleteBtn
-										onClick={() => {
-											setAskDelete(true);
-											setOk(recipe._id);
+										<>
+											{!showBookMarkControll[recipe._id] && (
+												<IoBookmark color="grey" />
+											)}
+											{showBookMarkControll[recipe._id] && (
+												<IoBookmarkOutline color="#000" />
+											)}
+										</>
+									</SaveRecipeBtn>
+								) : (
+									<SaveRecipeBtn
+										onClick={(e) => {
+											handleSaveRecipe(e, recipe);
 										}}
 									>
-										<MdDelete />
-									</DeleteBtn>
-								</ButtonController>
-							) : (
-								""
-							)}
+										<>
+											{showBookMarkControll[recipe._id] && (
+												<IoBookmark color="grey" />
+											)}
+											{!showBookMarkControll[recipe._id] && (
+												<IoBookmarkOutline color="#000" />
+											)}
+										</>
+									</SaveRecipeBtn>
+								)}
+							</ButtonController>
 						</RightSection>
 					</Top>
 					<Middle>
@@ -438,56 +525,138 @@ export const RecipeDetails = () => {
 							<ForWideScreen>
 								{relatedRecipe.length !== 0 &&
 									relatedRecipe?.map((p) => (
-										<Link
-											className="recipeLink"
+										<Recipe
 											key={p._id}
-											to={`/recipe/${p.slug}`}
-											style={{
-												height: "fit-content",
-												width: "fit-content",
+											onClick={() => {
+												navigate(`/recipe/${p.slug}`);
 											}}
 										>
-											<Recipe>
-												<ImgSimilar
-													src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${p._id}`}
-													alt="Recipe Photo"
-												/>
-												<Div>
-													<NameSimilar>{p.name.substring(0, 25)}</NameSimilar>
-													<SpanSimilar>
-														{p.updatedAt.substring(0, 10)}
-													</SpanSimilar>
-												</Div>
-											</Recipe>
-										</Link>
+											<ImgSimilar src={p?.photo?.url} alt="Recipe Photo" />
+											<Div>
+												<SubTitle>
+													<NameSimilar>{p?.name?.substring(0, 25)}</NameSimilar>
+													{fetchedRecipes.includes(p._id) ? (
+														<>
+															{!showBookMarkControll[p._id] && (
+																<IoBookmark
+																	size={20}
+																	color="grey"
+																	onClick={(e) => {
+																		e.stopPropagation();
+																		handleSaveRecipe(e, p);
+																	}}
+																/>
+															)}
+															{showBookMarkControll[p._id] && (
+																<IoBookmarkOutline
+																	size={20}
+																	onClick={(e) => {
+																		e.stopPropagation();
+																		handleSaveRecipe(e, p);
+																	}}
+																/>
+															)}
+														</>
+													) : (
+														<>
+															{showBookMarkControll[p._id] && (
+																<IoBookmark
+																	size={20}
+																	color="grey"
+																	onClick={(e) => {
+																		e.stopPropagation();
+																		handleSaveRecipe(e, p);
+																	}}
+																/>
+															)}
+															{!showBookMarkControll[p._id] && (
+																<IoBookmarkOutline
+																	size={20}
+																	onClick={(e) => {
+																		e.stopPropagation();
+																		handleSaveRecipe(e, p);
+																	}}
+																/>
+															)}
+														</>
+													)}
+												</SubTitle>
+
+												<SpanSimilar>
+													{p.updatedAt.substring(0, 10)}
+												</SpanSimilar>
+											</Div>
+										</Recipe>
 									))}
 							</ForWideScreen>
 							<ForPhoneScreen>
 								{relatedRecipe.length !== 0 && relatedRecipe.length > 0 && (
-									<Link
-										className="recipeLink"
+									<Recipe
 										key={relatedRecipe[0]._id}
-										to={`/recipe/${relatedRecipe[0].slug}`}
-										style={{
-											height: "fit-content",
-											width: "fit-content",
+										onClick={() => {
+											navigate(`/recipe/${relatedRecipe[0].slug}`);
 										}}
 									>
-										<Recipe>
-											<ImgSimilar
-												src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${relatedRecipe[0]._id}`}
-												alt="Recipe Photo"
-											/>
-											<Div>
+										<ImgSimilar
+											src={relatedRecipe[0]?.photo?.url}
+											alt="Recipe Photo"
+										/>
+										<Div>
+											<SubTitle>
 												<NameSimilar>
-													{relatedRecipe[0].name.substring(0, 25)}
+													{relatedRecipe[0]?.name?.substring(0, 25)}
 												</NameSimilar>
-												<SpanSimilar>
-													{relatedRecipe[0].updatedAt.substring(0, 10)}
-												</SpanSimilar>
-											</Div>
-										</Recipe>
-									</Link>
+												{fetchedRecipes.includes(relatedRecipe[0]._id) ? (
+													<>
+														{!showBookMarkControll[relatedRecipe[0]._id] && (
+															<IoBookmark
+																size={20}
+																color="grey"
+																onClick={(e) => {
+																	e.stopPropagation();
+																	handleSaveRecipe(e, relatedRecipe[0]);
+																}}
+															/>
+														)}
+														{showBookMarkControll[relatedRecipe[0]._id] && (
+															<IoBookmarkOutline
+																size={20}
+																onClick={(e) => {
+																	e.stopPropagation();
+																	handleSaveRecipe(e, relatedRecipe[0]);
+																}}
+															/>
+														)}
+													</>
+												) : (
+													<>
+														{showBookMarkControll[relatedRecipe[0]._id] && (
+															<IoBookmark
+																size={20}
+																color="grey"
+																onClick={(e) => {
+																	e.stopPropagation();
+																	handleSaveRecipe(e, relatedRecipe[0]);
+																}}
+															/>
+														)}
+														{!showBookMarkControll[relatedRecipe[0]._id] && (
+															<IoBookmarkOutline
+																size={20}
+																onClick={(e) => {
+																	e.stopPropagation();
+																	handleSaveRecipe(e, relatedRecipe[0]);
+																}}
+															/>
+														)}
+													</>
+												)}
+											</SubTitle>
+											<SpanSimilar>
+												{relatedRecipe[0].updatedAt.substring(0, 10)}
+											</SpanSimilar>
+										</Div>
+									</Recipe>
 								)}
 							</ForPhoneScreen>
 						</InnerSimilar>

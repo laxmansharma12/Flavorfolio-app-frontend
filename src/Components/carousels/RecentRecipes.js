@@ -174,10 +174,7 @@ const RecentRecipes = () => {
 						key={list._id}
 						onClick={() => navigate(`/recipe/${list.slug}`)}
 					>
-						<Img
-							src={`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/food-photo/${list._id}`}
-							alt="Recipe Photo"
-						></Img>
+						<Img src={list?.photo?.url} alt="Recipe Photo"></Img>
 						<Div>
 							<Name>{list.name.substring(0, 17)}</Name>
 						</Div>

@@ -17,8 +17,6 @@ import RecentRecipes from "../carousels/RecentRecipes";
 import IndianRecipes from "../carousels/IndianRecipes";
 import ChineseRecipes from "../carousels/ChineseRecipes";
 import AmericanRecipes from "../carousels/AmericanRecipes";
-import { useAllRecipes } from "../../context/recipesProvider";
-import axios from "axios";
 
 const CategoryBanner = styled.div`
 	background-color: rgb(243, 243, 243);
@@ -117,35 +115,9 @@ const RecipesTitle = styled.h2`
 `;
 
 const Home = () => {
-	const [recipes, setRecipes] = useAllRecipes();
-
-	//get all recipes
-	const GetMyRecipes = async () => {
-		try {
-			const { data } = await axios.get(
-				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-food`
-			);
-			if (data) {
-				setRecipes({
-					...recipes,
-					foods: data.foods,
-				});
-				localStorage.setItem("AllRecipes", JSON.stringify(data));
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
-
-	//lifecycle method
 	useEffect(() => {
-		GetMyRecipes();
+		window.scrollTo(0, 0);
 	}, []);
-
-	// useEffect(() => {
-	// 	window.scrollTo(0, 0);
-	// }, []);
-
 	return (
 		<Layout>
 			<SearchContainer>
@@ -206,7 +178,6 @@ const Home = () => {
 					</Link>
 				</CategoryBannerInner>
 			</CategoryBanner>
-
 			<RecipesContainer>
 				<RecipesInnerContainer>
 					<RecipesTitle>Latest Recipes</RecipesTitle>
