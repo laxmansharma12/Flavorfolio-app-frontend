@@ -339,7 +339,7 @@ const SearchContainer = styled.div`
 	}
 
 	@media screen and (max-width: 640px) {
-		height: 100vh;
+		height: 90vh;
 		padding: 25px 0 5px 0;
 	}
 
