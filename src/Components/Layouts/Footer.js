@@ -60,7 +60,7 @@ const ListContainer = styled.div`
 		justify-content: space-between;
 		.unOrderedlist {
 			margin-right: 18px;
-			margin-top: -15px;
+			margin-top: -11px;
 		}
 	}
 `;
@@ -70,6 +70,9 @@ const UL = styled.ul`
 	justify-content: center;
 	align-items: start;
 	flex-direction: column;
+	@media (max-width: 640px) {
+		gap: 5px;
+	}
 `;
 const LI = styled.li`
 	.home {
