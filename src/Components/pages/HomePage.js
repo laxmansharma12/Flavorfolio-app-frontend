@@ -12,11 +12,13 @@ import ThaiImg from "../images/wat-phra-kaew.png";
 import MexicoImg from "../images/mexico-pyramid.png";
 import ChinaImg from "../images/chinese.png";
 import OtherImg from "../images/other.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import RecentRecipes from "../carousels/RecentRecipes";
 import IndianRecipes from "../carousels/IndianRecipes";
 import ChineseRecipes from "../carousels/ChineseRecipes";
 import AmericanRecipes from "../carousels/AmericanRecipes";
+import { useAuth } from "../../context/authProvider";
+import toast from "react-hot-toast";
 
 const CategoryBanner = styled.div`
 	background-color: rgb(243, 243, 243);
@@ -43,6 +45,7 @@ const CategoryBannerInner = styled.div`
 		gap: 20px;
 	}
 	@media (max-width: 640px) {
+		padding: 20px 0;
 		justify-content: center;
 		width: 100%;
 		gap: 30px;
@@ -115,6 +118,8 @@ const RecipesTitle = styled.h2`
 `;
 
 const Home = () => {
+	const [auth, setAuth] = useAuth();
+	const navigate = useNavigate();
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
@@ -205,7 +210,16 @@ const Home = () => {
 					</ImagesSection>
 					<H1>Publish your recipe for FREE today</H1>
 					<P>Publish your Recipe in front of thousands of people for free.</P>
-					<Link className="addbtn" to={"/addrecipe"}>
+					<Link
+						className="addbtn"
+						onClick={() => {
+							{
+								auth?.user
+									? navigate("/addrecipe")
+									: toast.error("Please Login To Add Recipe");
+							}
+						}}
+					>
 						Submit Recipe
 					</Link>
 				</PublishRecipeInnerContainer>
@@ -325,7 +339,7 @@ const SearchContainer = styled.div`
 	}
 
 	@media screen and (max-width: 640px) {
-		padding: 32px 16px;
+		padding: 25px 0 5px 0;
 	}
 
 	z-index: 1;
@@ -420,7 +434,8 @@ const SubTitle = styled.div`
 	}
 
 	@media (max-width: 640px) {
-		width: 350px;
+		width: 85%;
+		margin-top: 10px;
 		font-size: 16px;
 		line-height: 32px;
 	}
@@ -453,7 +468,7 @@ const ExploreButton = styled.a`
 
 	@media (max-width: 640px) {
 		padding: 12px 0;
-		margin-top: 10px;
+		margin-top: 0px;
 		font-size: 18px;
 	}
 `;

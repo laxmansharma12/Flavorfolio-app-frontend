@@ -239,6 +239,7 @@ const SavedRecipePage = () => {
 				RecipeData
 			);
 			if (data.success) {
+				toggleBookMark(recipe._id);
 				toast.success(data.message);
 			} else {
 				toast.error(data.message);
@@ -330,7 +331,6 @@ const SavedRecipePage = () => {
 																		onClick={(e) => {
 																			e.stopPropagation();
 																			handleSaveRecipe(e, list);
-																			toggleBookMark(list._id);
 																		}}
 																	/>
 																)}
@@ -340,7 +340,6 @@ const SavedRecipePage = () => {
 																		size={20}
 																		onClick={(e) => {
 																			e.stopPropagation();
-																			toggleBookMark(list._id);
 																			handleSaveRecipe(e, list);
 																		}}
 																	/>
@@ -376,7 +375,6 @@ const SavedRecipePage = () => {
 																				onClick={(e) => {
 																					e.stopPropagation();
 																					handleSaveRecipe(e, s);
-																					toggleBookMark(s._id);
 																				}}
 																			/>
 																		)}
@@ -386,7 +384,6 @@ const SavedRecipePage = () => {
 																				size={20}
 																				onClick={(e) => {
 																					e.stopPropagation();
-																					toggleBookMark(s._id);
 																					handleSaveRecipe(e, s);
 																				}}
 																			/>

@@ -249,6 +249,7 @@ const Header = () => {
 	const [cross, setCross] = useState(false);
 	const location = useLocation();
 	const navigate = useNavigate();
+
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (
@@ -257,6 +258,8 @@ const Header = () => {
 				!mobileIcon.current.contains(event.target)
 			) {
 				setOpen(false);
+				setCross(false);
+				setBars(true);
 			}
 		};
 		document.addEventListener("mousedown", handleClickOutside);
@@ -343,11 +346,13 @@ const Header = () => {
 			{Open && (
 				<MobileMenuLinks open={Open} ref={navHide}>
 					<MobileLink
-						href="/addrecipe"
 						onClick={() => {
 							setOpen(!Open);
 							setCross(false);
 							setBars(true);
+							auth?.user
+								? navigate("/addrecipe")
+								: toast.error("Please Login To Add Recipe");
 						}}
 					>
 						Add-recipe
