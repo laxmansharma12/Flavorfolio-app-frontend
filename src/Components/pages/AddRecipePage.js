@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../Layouts/Layout";
-import BgImg from "../images/i-like-food.svg";
 import styled from "styled-components";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -14,7 +13,7 @@ const { Option } = Select;
 const AddRecipeContainer = styled.div`
 	position: relative;
 	width: 100%;
-	background-image: url(${BgImg});
+	background-color: rgb(229, 231, 235);
 	background-color: rgb(243, 243, 243);
 	display: flex;
 	flex-direction: column;
@@ -35,38 +34,58 @@ const AddRecipeInnerContainer = styled.div`
 	justify-content: center;
 	width: fit-content;
 	max-width: 1300px;
+	border-radius: 10px;
 	flex-direction: column;
 	align-items: center;
+	margin-bottom: 20px;
+	@media (max-width: 1310px) {
+		width: 95%;
+		padding-bottom: 20px;
+	}
 	@media (max-width: 640px) {
 		width: 95%;
+		padding-bottom: 10px;
 	}
 `;
 
 const InputDataControll = styled.div`
-	height: fit-content;
-	width: fit-content;
-	padding: 20px 30px;
-	@media (max-width: 640px) {
-		padding: 0px 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	@media (max-width: 1310px) {
+		width: 100%;
 	}
 `;
 const AddRecipeHeader = styled.h2`
 	font-weight: bold;
 	font-size: 30px;
 	text-align: left;
-	margin: 0 0 20px 0;
+	margin-bottom: 0;
 	@media (max-width: 640px) {
 		text-align: center;
 	}
 `;
 
+const Subtitle = styled.p`
+	margin: 0 0 10px 0;
+	width: 30%;
+	color: rgb(66, 64, 64);
+	text-align: center;
+	@media (max-width: 1310px) {
+		width: 90%;
+	}
+`;
+
 const Form = styled.form`
-	width: 800px;
-	padding: 0 10px;
+	width: 780px;
+	padding: 0 30px;
 	display: flex;
 	flex-direction: column;
+	@media (max-width: 1310px) {
+		width: 95%;
+	}
 	@media (max-width: 640px) {
-		width: 320px;
+		padding: 0 20px;
 	}
 	.select-category {
 		padding: 7px;
@@ -151,7 +170,7 @@ const Button = styled.button`
 	font-weight: bold;
 	padding: 5px 0;
 	border-radius: 5px;
-	margin: 10px 0;
+	margin: 20px 0;
 	box-shadow: 3px 3px 7px rgba(61, 60, 60, 0.5);
 	&:hover {
 		background-color: rgb(13, 212, 16);
@@ -165,6 +184,7 @@ const PhotoControll = styled.div`
 	gap: 10px;
 	align-items: center;
 	flex-direction: column;
+	margin-top: 30px;
 	@media (max-width: 640px) {
 		gap: 10px;
 		padding: 0 0 3rem 0;
@@ -251,7 +271,7 @@ const SubDiv = styled.div`
 	gap: 5px;
 `;
 const InputField = styled.input`
-	width: 94%;
+	width: 100%;
 	outline: none;
 	box-shadow: none;
 	height: 20px;
@@ -415,11 +435,14 @@ const AddRecipePage = () => {
 	return (
 		<Layout title={"AddRecipe"}>
 			<AddRecipeContainer>
+				<AddRecipeHeader>Add Recipe</AddRecipeHeader>
+				<Subtitle>
+					Share your signature recipe with Flavorfolio and become part of our
+					diverse culinary community.
+				</Subtitle>
 				<AddRecipeInnerContainer>
 					{!isSubmitting && (
 						<>
-							<AddRecipeHeader>Add Recipe</AddRecipeHeader>
-
 							<PhotoControll>
 								{photo ? (
 									<>
