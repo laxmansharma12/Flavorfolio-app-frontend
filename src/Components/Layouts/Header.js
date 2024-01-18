@@ -390,16 +390,6 @@ const Header = () => {
 						>
 							Contact
 						</MobileLink>
-						<MobileLink
-							href="/search"
-							onClick={() => {
-								setOpen(!Open);
-								setCross(false);
-								setBars(true);
-							}}
-						>
-							Search
-						</MobileLink>
 						{!auth.user ? (
 							<>
 								<LoginButton
