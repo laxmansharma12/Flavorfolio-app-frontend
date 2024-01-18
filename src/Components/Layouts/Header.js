@@ -281,7 +281,13 @@ const Header = () => {
 		window.location.reload();
 	};
 	return (
-		<Headroom>
+		<Headroom
+			onUnpin={() => {
+				setOpen(false);
+				setCross(false);
+				setBars(true);
+			}}
+		>
 			<Nav>
 				<NavContainer>
 					<LeftSection>
