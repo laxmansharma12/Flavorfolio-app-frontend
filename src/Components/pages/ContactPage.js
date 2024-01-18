@@ -76,6 +76,7 @@ const DescForm = styled.form`
 	@media (max-width: 768px) {
 		margin-top: 0;
 		font-size: 16px;
+		justify-content: center;
 		padding: 0 0 0 17px;
 	}
 `;
@@ -89,6 +90,7 @@ const ContactForm = styled.form`
 	gap: 12px;
 	@media (max-width: 768px) {
 		width: 85%;
+		padding: 32px;
 	}
 `;
 
