@@ -396,6 +396,7 @@ const AddRecipePage = () => {
 		e.preventDefault();
 		try {
 			if (auth?.user) {
+				window.scrollTo(0, 0);
 				setIsSubmitting(true);
 				const RecipeData = new FormData();
 				RecipeData.append("name", name);
