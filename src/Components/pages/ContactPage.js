@@ -4,6 +4,9 @@ import BgImg from "../images/i-like-food.svg";
 import { Layout } from "../Layouts/Layout";
 import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
+import { FaTwitter } from "react-icons/fa";
+import { TbBrandGithubFilled } from "react-icons/tb";
+import { FaLinkedinIn } from "react-icons/fa6";
 
 const Container = styled.div`
 	display: flex;
@@ -82,7 +85,7 @@ const ContactForm = styled.form`
 	max-width: 600px;
 	display: flex;
 	flex-direction: column;
-	padding: 32px;
+	padding: 32px 32px 32px 0;
 	gap: 12px;
 	@media (max-width: 768px) {
 		width: 85%;
@@ -125,7 +128,6 @@ const ContactButton = styled.input`
 	text-decoration: none;
 	text-align: center;
 	background-color: rgb(16, 188, 19);
-
 	padding: 15px 16px;
 	margin-top: 2px;
 	border-radius: 12px;
@@ -142,6 +144,20 @@ const ContactButton = styled.input`
 	}
 `;
 
+const IconsContainer = styled.div`
+	display: flex;
+	justify-content: start;
+	align-items: start;
+	padding: 20px 0 15px 0;
+	gap: 15px;
+`;
+const Icons = styled.a`
+	display: flex;
+	color: #000;
+	border: 1px solid #000;
+	padding: 10px;
+	border-radius: 50%;
+`;
 const ContactPage = () => {
 	const form = useRef();
 
@@ -176,6 +192,26 @@ const ContactPage = () => {
 							questions, suggestions, or just want to say hello, feel free to
 							reach out to us.
 						</Desc>
+						<IconsContainer>
+							<Icons
+								href={"https://www.linkedin.com/in/laxman-sharma/"}
+								target="display"
+							>
+								<FaLinkedinIn />
+							</Icons>
+							<Icons
+								href={"https://twitter.com/laxmansharmaX"}
+								target="display"
+							>
+								<FaTwitter />
+							</Icons>
+							<Icons
+								href={"https://github.com/laxmansharma12"}
+								target="display"
+							>
+								<TbBrandGithubFilled />
+							</Icons>
+						</IconsContainer>
 					</DescForm>
 					<ContactForm ref={form} onSubmit={handleSubmit}>
 						<ContactInput

@@ -125,8 +125,6 @@ const IconsContainer = styled.div`
 `;
 const Icons = styled.a`
 	display: flex;
-	justify-content: center;
-	align-items: center;
 	color: #fff;
 	border: 1px solid #fff;
 	padding: 10px;
