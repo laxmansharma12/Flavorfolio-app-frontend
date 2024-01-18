@@ -12,6 +12,8 @@ import toast from "react-hot-toast";
 import { useAuth } from "../../context/authProvider";
 import { RxCross2 } from "react-icons/rx";
 import { SearchInput } from "../form/SearchInput";
+import Headroom from "react-headroom";
+
 const Nav = styled.div`
 	background-color: rgb(0, 61, 17);
 	height: 60px;
@@ -22,8 +24,8 @@ const Nav = styled.div`
 	position: sticky;
 	top: 0;
 	z-index: 10;
-	@media (max-width: 960px) {
-		transition: 0.8s all ease;
+	@media (max-width: 640px) {
+		height: fit-content;
 	}
 `;
 const NavContainer = styled.div`
@@ -193,16 +195,16 @@ const LogoutButton = styled.button`
 
 //mobile view navlinks styles
 const MobileMenuLinks = styled.div`
-	background-color: rgb(0, 61, 17);
+	position: absolute;
 	display: flex;
-	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	gap: 16px;
-	position: absolute;
+	flex-direction: column;
+	gap: 0.5rem;
 	top: 60px;
+	padding: 10px 0 15px 0;
+	background-color: rgb(0, 61, 17);
 	width: 100%;
-	padding: 12px 40px 24px 20px;
 	border-radius: 0 0 20px 20px;
 	box-shadow: 0 5 10px rgba(0, 0, 0, 0.3);
 `;
@@ -279,128 +281,152 @@ const Header = () => {
 		window.location.reload();
 	};
 	return (
-		<Nav>
-			<NavContainer>
-				<LeftSection>
-					<NavLogo to="/">Flavorfolio</NavLogo>
-					<NavItems>
-						{location.pathname !== "/" && (
-							<Link className="home" to={"/"}>
-								Home
-							</Link>
+		<Headroom>
+			<Nav>
+				<NavContainer>
+					<LeftSection>
+						<NavLogo to="/">Flavorfolio</NavLogo>
+						<NavItems>
+							{location.pathname !== "/" && (
+								<Link className="home" to={"/"}>
+									Home
+								</Link>
+							)}
+							<NavLink
+								onClick={() => {
+									{
+										auth?.user
+											? navigate("/addrecipe")
+											: toast.error("Please Login To Add Recipe");
+									}
+								}}
+							>
+								AddRecipe
+							</NavLink>
+							<NavLink href="/myrecipe">MyRecipes</NavLink>
+							<NavLink href="/savedrecipe">SavedRecipes</NavLink>
+							<NavLink href="/contact">Contact</NavLink>
+						</NavItems>
+					</LeftSection>
+					<MobileIcon ref={mobileIcon}>
+						{bars && (
+							<FaBars
+								onClick={() => {
+									setOpen(!Open);
+									setBars(false);
+									setCross(true);
+								}}
+							/>
 						)}
-						<NavLink
+						{cross && (
+							<RxCross2
+								onClick={() => {
+									setOpen(!Open);
+									setBars(true);
+									setCross(false);
+								}}
+							/>
+						)}
+					</MobileIcon>
+
+					<RightSection>
+						<SearchInput />
+						<ButtonContainer>
+							{!auth.user ? (
+								<>
+									<LoginButton href="/login">Login</LoginButton>
+									<RegisterButton href="/register">Register</RegisterButton>
+								</>
+							) : (
+								<UserNameDiv>
+									<UserName>{auth.user.name}</UserName>
+									<MdLogout className="logout" onClick={HandleLogout} />
+								</UserNameDiv>
+							)}
+						</ButtonContainer>
+					</RightSection>
+				</NavContainer>
+				{Open && (
+					<MobileMenuLinks open={Open} ref={navHide}>
+						<MobileLink
 							onClick={() => {
-								{
-									auth?.user
-										? navigate("/addrecipe")
-										: toast.error("Please Login To Add Recipe");
-								}
+								setOpen(!Open);
+								setCross(false);
+								setBars(true);
+								auth?.user
+									? navigate("/addrecipe")
+									: toast.error("Please Login To Add Recipe");
 							}}
 						>
 							AddRecipe
-						</NavLink>
-						<NavLink href="/myrecipe">MyRecipes</NavLink>
-						<NavLink href="/savedrecipe">SavedRecipes</NavLink>
-						<NavLink href="/contact">Contact</NavLink>
-					</NavItems>
-				</LeftSection>
-				<MobileIcon ref={mobileIcon}>
-					{bars && (
-						<FaBars
+						</MobileLink>
+						<MobileLink
+							href="myrecipe"
 							onClick={() => {
 								setOpen(!Open);
-								setBars(false);
-								setCross(true);
-							}}
-						/>
-					)}
-					{cross && (
-						<RxCross2
-							onClick={() => {
-								setOpen(!Open);
-								setBars(true);
 								setCross(false);
+								setBars(true);
 							}}
-						/>
-					)}
-				</MobileIcon>
-
-				<RightSection>
-					<SearchInput />
-					<ButtonContainer>
+						>
+							MyRecipes
+						</MobileLink>
+						<MobileLink
+							href="savedrecipe"
+							onClick={() => {
+								setOpen(!Open);
+								setCross(false);
+								setBars(true);
+							}}
+						>
+							SavedRecipes
+						</MobileLink>
+						<MobileLink
+							href="/contact"
+							onClick={() => {
+								setOpen(!Open);
+								setCross(false);
+								setBars(true);
+							}}
+						>
+							Contact
+						</MobileLink>
+						<MobileLink
+							href="/search"
+							onClick={() => {
+								setOpen(!Open);
+								setCross(false);
+								setBars(true);
+							}}
+						>
+							Search
+						</MobileLink>
 						{!auth.user ? (
 							<>
-								<LoginButton href="/login">Login</LoginButton>
-								<RegisterButton href="/register">Register</RegisterButton>
+								<LoginButton
+									style={{
+										padding: "10px 16px",
+										background: "transparent",
+										color: "white",
+										width: "max-content",
+									}}
+									href="/login"
+								>
+									Login
+								</LoginButton>
+								<RegisterButton
+									style={{
+										padding: "10px 16px",
+										background: "rgb(5, 163, 49)",
+										color: "white",
+										width: "max-content",
+									}}
+									href="/register"
+								>
+									Register
+								</RegisterButton>
 							</>
 						) : (
-							<UserNameDiv>
-								<UserName>{auth.user.name}</UserName>
-								<MdLogout className="logout" onClick={HandleLogout} />
-							</UserNameDiv>
-						)}
-					</ButtonContainer>
-				</RightSection>
-			</NavContainer>
-			{Open && (
-				<MobileMenuLinks open={Open} ref={navHide}>
-					<MobileLink
-						onClick={() => {
-							setOpen(!Open);
-							setCross(false);
-							setBars(true);
-							auth?.user
-								? navigate("/addrecipe")
-								: toast.error("Please Login To Add Recipe");
-						}}
-					>
-						Add-recipe
-					</MobileLink>
-					<MobileLink
-						href="myrecipe"
-						onClick={() => {
-							setOpen(!Open);
-							setCross(false);
-							setBars(true);
-						}}
-					>
-						My-recipe
-					</MobileLink>
-					<MobileLink
-						href="savedrecipe"
-						onClick={() => {
-							setOpen(!Open);
-							setCross(false);
-							setBars(true);
-						}}
-					>
-						Saved-recipe
-					</MobileLink>
-					<MobileLink
-						href="/contact"
-						onClick={() => {
-							setOpen(!Open);
-							setCross(false);
-							setBars(true);
-						}}
-					>
-						Contact
-					</MobileLink>
-					{!auth.user ? (
-						<>
-							<LoginButton
-								style={{
-									padding: "10px 16px",
-									background: "transparent",
-									color: "white",
-									width: "max-content",
-								}}
-								href="/login"
-							>
-								Login
-							</LoginButton>
-							<RegisterButton
+							<LogoutButton
 								style={{
 									padding: "10px 16px",
 									background: "rgb(5, 163, 49)",
@@ -408,27 +434,15 @@ const Header = () => {
 									width: "max-content",
 								}}
 								href="/register"
+								onClick={HandleLogout}
 							>
-								Register
-							</RegisterButton>
-						</>
-					) : (
-						<LogoutButton
-							style={{
-								padding: "10px 16px",
-								background: "rgb(5, 163, 49)",
-								color: "white",
-								width: "max-content",
-							}}
-							href="/register"
-							onClick={HandleLogout}
-						>
-							Logout
-						</LogoutButton>
-					)}
-				</MobileMenuLinks>
-			)}
-		</Nav>
+								Logout
+							</LogoutButton>
+						)}
+					</MobileMenuLinks>
+				)}
+			</Nav>
+		</Headroom>
 	);
 };
 

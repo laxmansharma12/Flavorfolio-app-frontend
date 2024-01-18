@@ -24,7 +24,7 @@ export const Layout = ({ children, title, description, keywords, author }) => {
 	);
 };
 Layout.defaultProps = {
-	title: "Flavorfolio-app",
+	title: "Flavorfolio",
 	description: "MERN stack project",
 	keywords: "MERN,mern,react,food,recipe,foodrecipe,node,briyani",
 	author: "laxman-sharma",

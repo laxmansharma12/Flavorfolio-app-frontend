@@ -14,6 +14,7 @@
 		"geist": "^1.2.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
+		"react-headroom": "^3.2.1",
 		"react-helmet": "^6.1.0",
 		"react-hot-toast": "^2.4.1",
 		"react-icons": "^4.12.0",

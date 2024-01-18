@@ -342,8 +342,6 @@ const SearchContainer = styled.div`
 		height: 80vh;
 		padding: 25px 0 5px 0;
 	}
-
-	z-index: 1;
 `;
 
 // SearchLeftContainer and searchRightContainer styles
