@@ -17,7 +17,7 @@ const LoginContainer = styled.div`
 	justify-content: center;
 	align-items: center;
 	@media (max-width: 640px) {
-		height: 92vh;
+		height: 85vh;
 	}
 `;
 const RightSection = styled.div`

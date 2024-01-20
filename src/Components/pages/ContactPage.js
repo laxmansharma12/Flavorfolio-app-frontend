@@ -20,7 +20,7 @@ const Container = styled.div`
 	background-color: rgb(243, 243, 243);
 	@media (max-width: 640px) {
 		padding: 0 16px;
-		height: 92vh;
+		height: 85vh;
 	}
 	@media (max-width: 960px) {
 		padding: 0px;
