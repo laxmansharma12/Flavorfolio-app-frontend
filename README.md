@@ -1,4 +1,4 @@
-![Screenshot from 2024-01-20 17-03-58](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/49c39c01-d50f-413b-9ff9-7d1975a4204c)![Screenshot from 2024-01-20 16-58-01](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/79ea08a7-bd46-4187-8901-f6285090eae1)
+![Screenshot from 2024-01-20 16-58-01](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/79ea08a7-bd46-4187-8901-f6285090eae1)
 ![Screenshot from 2024-01-20 17-00-38](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/ae53ffae-f0f6-4603-89d0-7eeab090f1ef)
 ![Screenshot from 2024-01-20 17-01-15](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/e7d848a0-ae52-49c0-ab0a-1141a7ea483b)
 ![Screenshot from 2024-01-20 17-03-11](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/336abe80-b8f0-4741-a8e3-9f788d652e9d)
