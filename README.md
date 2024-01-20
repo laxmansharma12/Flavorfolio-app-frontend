@@ -1,70 +1,7 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+![Screenshot from 2024-01-20 17-03-58](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/49c39c01-d50f-413b-9ff9-7d1975a4204c)![Screenshot from 2024-01-20 16-58-01](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/79ea08a7-bd46-4187-8901-f6285090eae1)
+![Screenshot from 2024-01-20 17-00-38](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/ae53ffae-f0f6-4603-89d0-7eeab090f1ef)
+![Screenshot from 2024-01-20 17-01-15](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/e7d848a0-ae52-49c0-ab0a-1141a7ea483b)
+![Screenshot from 2024-01-20 17-03-11](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/336abe80-b8f0-4741-a8e3-9f788d652e9d)
+![Screenshot from 2024-01-20 17-03-22](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/36e1ff66-fae9-422b-ab65-990987d91e5d)
+![Screenshot from 2024-01-20 17-03-58](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/224fef69-017c-4e6a-b053-e9b9888caf7f)
+![Screenshot from 2024-01-20 17-00-13](https://github.com/laxmansharma12/Flavorfolio-app-frontend/assets/91863813/96d87b54-8d9f-4263-b007-19063f869d2d)
