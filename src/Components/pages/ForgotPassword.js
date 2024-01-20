@@ -92,7 +92,7 @@ const ForgotPasswordContainer = styled.div`
 	justify-content: center;
 	align-items: center;
 	@media (max-width: 640px) {
-		height: 85vh;
+		height: 88vh;
 	}
 `;
 const RightSection = styled.div`
