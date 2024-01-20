@@ -9,7 +9,7 @@ import axios from "axios";
 import { useAuth } from "../../context/authProvider";
 
 const RegisterContainer = styled.div`
-	height: 85vh;
+	height: 92vh;
 	width: 100%;
 	background-image: url(${BgImg});
 	background-color: rgb(243, 243, 243);
@@ -17,6 +17,9 @@ const RegisterContainer = styled.div`
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	@media (max-width: 640px) {
+		height: 92vh;
+	}
 `;
 const RightSection = styled.div`
 	height: fit-content;

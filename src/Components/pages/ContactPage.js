@@ -14,13 +14,13 @@ const Container = styled.div`
 	justify-content: center;
 	position: relative;
 	width: 100%;
-	height: 85vh;
+	height: 92vh;
 	align-items: center;
 	background-image: url(${BgImg});
 	background-color: rgb(243, 243, 243);
-	@media screen and (max-width: 640px) {
+	@media (max-width: 640px) {
 		padding: 0 16px;
-		height: 85vh;
+		height: 92vh;
 	}
 	@media (max-width: 960px) {
 		padding: 0px;
