@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Layout } from "../Layouts/Layout";
+import { Layout } from "../Components/Layouts/Layout";
 import styled from "styled-components";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Radio, Select } from "antd";
-import { useAuth } from "../../context/authProvider";
+import { useAuth } from "../context/authProvider";
 import toast from "react-hot-toast";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
-import { useAllFetchedRecipes } from "../../context/savedRecipesProvider";
-import { useAllRecipes } from "../../context/recipesProvider";
+import { useAllSavedRecipes } from "../context/savedRecipesProvider";
 
 const Option = Select;
-
 const MySavedrecipesContainer = styled.div`
 	width: 100%;
 	background-color: rgb(243, 243, 243);
@@ -171,15 +169,15 @@ const SelectGroup = styled.div`
 	}
 `;
 
-const ExplorePage = () => {
-	const [recipes, setRecipes] = useAllRecipes();
+const SavedRecipePage = () => {
+	const [recipesListArray, setRecipesListArray] = useState([]);
 	const [categories, setCategories] = useState([]);
 	const [category, setCategory] = useState("All");
 	const [userId, setUserId] = useState([]);
 	const [search, setSearch] = useState([]);
 	const [auth, setAuth] = useAuth();
 	const [showBookMarkControll, setShowBookMarkControll] = useState({});
-	const [fetchedRecipes, setFetchedRecipes] = useAllFetchedRecipes();
+	const [fetchedRecipes, setFetchedRecipes] = useAllSavedRecipes();
 
 	const navigate = useNavigate();
 
@@ -202,13 +200,25 @@ const ExplorePage = () => {
 		}
 	};
 
+	//get all recipes
+	const GetMyRecipes = async () => {
+		try {
+			if (fetchedRecipes) {
+				setRecipesListArray(fetchedRecipes);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	//lifecycle method
 	useEffect(() => {
+		GetMyRecipes();
 		getAllCategory();
-	}, [recipes]);
+	}, [auth?.user, fetchedRecipes]);
 
 	useEffect(() => {
-		const updateSearchRecipes = recipes?.foods?.filter(
+		const updateSearchRecipes = recipesListArray.filter(
 			(list) => list?.category === category
 		);
 		setSearch(updateSearchRecipes);
@@ -221,22 +231,18 @@ const ExplorePage = () => {
 	const handleSaveRecipe = async (e, recipe) => {
 		e.stopPropagation();
 		try {
-			if (auth?.user) {
-				const RecipeData = new FormData();
-				RecipeData.append("_id", recipe._id);
-				RecipeData.append("userId", userId);
-				const { data } = await axios.post(
-					`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/save-recipe`,
-					RecipeData
-				);
-				if (data.success) {
-					toggleBookMark(recipe._id);
-					toast.success(data.message);
-				} else {
-					toast.error(data.message);
-				}
+			const RecipeData = new FormData();
+			RecipeData.append("_id", recipe._id);
+			RecipeData.append("userId", userId);
+			const { data } = await axios.post(
+				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/save-recipe`,
+				RecipeData
+			);
+			if (data.success) {
+				toggleBookMark(recipe._id);
+				toast.success(data.message);
 			} else {
-				toast.error("Please Login To Save");
+				toast.error(data.message);
 			}
 		} catch (error) {
 			console.log(error);
@@ -253,7 +259,7 @@ const ExplorePage = () => {
 		<Layout title={"My-savedRecipes"}>
 			<MySavedrecipesContainer>
 				<Title>
-					<H1>Explore all</H1>
+					<H1>My saved recipes</H1>
 					<Section>
 						<RadioGroup>
 							<Radio.Group
@@ -293,140 +299,112 @@ const ExplorePage = () => {
 							</Select>
 						</SelectGroup>
 					</Section>
-					<L>Total Recipes: {recipes?.foods?.length}</L>
+					<L>Total Recipes: {recipesListArray.length}</L>
 				</Title>
 
 				<MySavedRecipesInnerContainer>
 					<>
-						{category === "All" ? (
+						{auth?.user ? (
 							<>
-								{recipes?.foods?.map((list) => (
-									<Recipe
-										key={list._id}
-										onClick={() => {
-											navigate(`/recipe/${list.slug}`);
-										}}
-									>
-										<Img src={list?.photo?.url} alt="Recipe Photo"></Img>
-										<Div>
-											<SubTitle>
-												<Name>{list?.name?.substring(0, 25)}</Name>
-												{fetchedRecipes.includes(list._id) ? (
+								{recipesListArray.length !== 0 ? (
+									<>
+										{category === "All" ? (
+											<>
+												{recipesListArray.map((list) => (
+													<Recipe
+														key={list._id}
+														onClick={() => {
+															navigate(`/recipe/${list.slug}`);
+														}}
+													>
+														<Img
+															src={list?.photo?.url}
+															alt="Recipe Photo"
+														></Img>
+														<Div>
+															<SubTitle>
+																<Name>{list?.name?.substring(0, 25)}</Name>
+																{!showBookMarkControll[list._id] && (
+																	<IoBookmark
+																		size={20}
+																		color="grey"
+																		onClick={(e) => {
+																			e.stopPropagation();
+																			handleSaveRecipe(e, list);
+																		}}
+																	/>
+																)}
+
+																{showBookMarkControll[list._id] && (
+																	<IoBookmarkOutline
+																		size={20}
+																		onClick={(e) => {
+																			e.stopPropagation();
+																			handleSaveRecipe(e, list);
+																		}}
+																	/>
+																)}
+															</SubTitle>
+															<Span>{list?.updatedAt?.substring(0, 10)}</Span>
+														</Div>
+													</Recipe>
+												))}
+											</>
+										) : (
+											<>
+												{search.length !== 0 ? (
 													<>
-														{!showBookMarkControll[list._id] && (
-															<IoBookmark
-																size={20}
-																color="grey"
-																onClick={(e) => {
-																	e.stopPropagation();
-																	handleSaveRecipe(e, list);
+														{search.map((s) => (
+															<Recipe
+																key={s._id}
+																onClick={() => {
+																	navigate(`/recipe/${s.slug}`);
 																}}
-															/>
-														)}
-														{showBookMarkControll[list._id] && (
-															<IoBookmarkOutline
-																size={20}
-																onClick={(e) => {
-																	e.stopPropagation();
-																	handleSaveRecipe(e, list);
-																}}
-															/>
-														)}
+															>
+																<Img
+																	src={s?.photo?.url}
+																	alt="Recipe Photo"
+																></Img>
+																<Div>
+																	<SubTitle>
+																		<Name>{s?.name?.substring(0, 25)}</Name>
+																		{!showBookMarkControll[s._id] && (
+																			<IoBookmark
+																				size={20}
+																				color="grey"
+																				onClick={(e) => {
+																					e.stopPropagation();
+																					handleSaveRecipe(e, s);
+																				}}
+																			/>
+																		)}
+
+																		{showBookMarkControll[s._id] && (
+																			<IoBookmarkOutline
+																				size={20}
+																				onClick={(e) => {
+																					e.stopPropagation();
+																					handleSaveRecipe(e, s);
+																				}}
+																			/>
+																		)}
+																	</SubTitle>
+																	<Span>{s?.updatedAt?.substring(0, 10)}</Span>
+																</Div>
+															</Recipe>
+														))}
 													</>
 												) : (
-													<>
-														{showBookMarkControll[list._id] && (
-															<IoBookmark
-																size={20}
-																color="grey"
-																onClick={(e) => {
-																	e.stopPropagation();
-																	handleSaveRecipe(e, list);
-																}}
-															/>
-														)}
-														{!showBookMarkControll[list._id] && (
-															<IoBookmarkOutline
-																size={20}
-																onClick={(e) => {
-																	e.stopPropagation();
-																	handleSaveRecipe(e, list);
-																}}
-															/>
-														)}
-													</>
+													<EmptyRecipes>
+														<L className="label">No Recipes</L>
+														<L>
+															<Link to={"/addrecipe"}>Click here</Link> to add
+															your recipes
+														</L>
+													</EmptyRecipes>
 												)}
-											</SubTitle>
-											<Span>{list?.updatedAt?.substring(0, 10)}</Span>
-										</Div>
-									</Recipe>
-								))}
-							</>
-						) : (
-							<>
-								{search && search.length !== 0 ? (
-									<>
-										{search.map((s) => (
-											<Recipe
-												key={s._id}
-												onClick={() => {
-													navigate(`/recipe/${s.slug}`);
-												}}
-											>
-												<Img src={s?.photo?.url} alt="Recipe Photo"></Img>
-												<Div>
-													<SubTitle>
-														<Name>{s?.name?.substring(0, 25)}</Name>
-														{fetchedRecipes.includes(s._id) ? (
-															<>
-																{!showBookMarkControll[s._id] && (
-																	<IoBookmark
-																		size={20}
-																		color="grey"
-																		onClick={(e) => {
-																			e.stopPropagation();
-																			handleSaveRecipe(e, s);
-																		}}
-																	/>
-																)}
-																{showBookMarkControll[s._id] && (
-																	<IoBookmarkOutline
-																		size={20}
-																		onClick={(e) => {
-																			e.stopPropagation();
-																			handleSaveRecipe(e, s);
-																		}}
-																	/>
-																)}
-															</>
-														) : (
-															<>
-																{showBookMarkControll[s._id] && (
-																	<IoBookmark
-																		size={20}
-																		color="grey"
-																		onClick={(e) => {
-																			e.stopPropagation();
-																			handleSaveRecipe(e, s);
-																		}}
-																	/>
-																)}
-																{!showBookMarkControll[s._id] && (
-																	<IoBookmarkOutline
-																		size={20}
-																		onClick={(e) => {
-																			e.stopPropagation();
-																			handleSaveRecipe(e, s);
-																		}}
-																	/>
-																)}
-															</>
-														)}
-													</SubTitle>
-													<Span>{s?.updatedAt?.substring(0, 10)}</Span>
-												</Div>
-											</Recipe>
-										))}
+											</>
+										)}
 									</>
 								) : (
 									<EmptyRecipes>
@@ -438,6 +416,13 @@ const ExplorePage = () => {
 									</EmptyRecipes>
 								)}
 							</>
+						) : (
+							<EmptyRecipes>
+								<L className="label">Please login to view your saved recipes</L>
+								<L>
+									<Link to={"/login"}>Click here</Link> to login
+								</L>
+							</EmptyRecipes>
 						)}
 					</>
 				</MySavedRecipesInnerContainer>
@@ -446,4 +431,4 @@ const ExplorePage = () => {
 	);
 };
 
-export default ExplorePage;
+export default SavedRecipePage;

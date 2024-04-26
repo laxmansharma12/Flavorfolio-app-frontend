@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { Layout } from "../../Layouts/Layout";
+import { useNavigate, useParams } from "react-router-dom";
+import { Layout } from "../../Components/Layouts/Layout";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
-import { useAllRecipes } from "../../../context/recipesProvider";
 import toast from "react-hot-toast";
-import { useAuth } from "../../../context/authProvider";
-import { useAllFetchedRecipes } from "../../../context/savedRecipesProvider";
+import { useAllRecipes } from "../../context/recipesProvider";
+import { useAuth } from "../../context/authProvider";
+import { useAllFetchedRecipes } from "../../context/savedRecipesProvider";
 
-const IndianRecipesContainer = styled.div`
+const RecipesContainer = styled.div`
 	width: 100%;
 	background-color: rgb(243, 243, 243);
 	display: flex;
@@ -22,7 +22,7 @@ const IndianRecipesContainer = styled.div`
 	}
 `;
 
-const IndianRecipesInnerContainer = styled.div`
+const RecipesInnerContainer = styled.div`
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
@@ -114,7 +114,7 @@ const SubTitle = styled.div`
 	flex-direction: row;
 	width: 93%;
 `;
-const IndianRecipes = () => {
+const Recipes = () => {
 	const [recipesListArray, setRecipesListArray] = useState([]);
 	const [auth, setAuth] = useAuth();
 	const [userId, setUserId] = useState([]);
@@ -122,29 +122,24 @@ const IndianRecipes = () => {
 	const [fetchedRecipes, setFetchedRecipes] = useAllFetchedRecipes();
 	const navigate = useNavigate();
 	const [showBookMarkControll, setShowBookMarkControll] = useState({});
-
-	useEffect(() => {
-		setUserId(auth?.user?._id);
-	}, [recipes]);
+	const params = useParams();
 
 	//get all recipes
-	const GetIndianRecipes = async () => {
+	const GetRecipes = async () => {
 		try {
-			if (recipes?.foods) {
-				const updatedRecipesListArray = recipes?.foods.filter(
-					(list) => list?.category === "658061c3a2ae14d29540223f"
-				);
-				setRecipesListArray(updatedRecipesListArray);
+			if (params?.slug) {
+				console.log(params?.slug);
+				if (recipes?.foods) {
+					const updatedRecipesListArray = recipes?.foods.filter(
+						(list) => list?.category.name === params?.slug
+					);
+					setRecipesListArray(updatedRecipesListArray);
+				}
 			}
 		} catch (error) {
 			console.log(error);
 		}
 	};
-
-	//lifecycle method
-	useEffect(() => {
-		GetIndianRecipes();
-	}, [recipes]);
 
 	const handleSaveRecipe = async (e, recipe) => {
 		e.stopPropagation();
@@ -170,7 +165,6 @@ const IndianRecipes = () => {
 			console.log(error);
 		}
 	};
-
 	const toggleBookMark = (recipeId) => {
 		setShowBookMarkControll((prevSaveRecipes) => ({
 			...prevSaveRecipes,
@@ -178,83 +172,95 @@ const IndianRecipes = () => {
 		}));
 	};
 
+	//lifecycle method
+	useEffect(() => {
+		setUserId(auth?.user?._id);
+	}, [recipes]);
+
+	useEffect(() => {
+		GetRecipes();
+	}, [recipes]);
+
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
+
 	return (
-		<Layout title={"IndianRecipes"}>
-			<IndianRecipesContainer>
-				<H1>Indian Recipes</H1>
+		<Layout title={"Recipes"}>
+			<RecipesContainer>
+				<H1>American Recipes</H1>
 				<L>
-					Indian cuisine is a vibrant tapestry of flavors, colors, and aromas,
-					weaving together a rich cultural heritage.
+					American food is a vibrant mosaic of flavors, reflecting the diverse
+					cultural influences that shape the nation.
 				</L>
-				<IndianRecipesInnerContainer>
-					{recipesListArray.map((list) => (
-						<Recipe
-							key={list._id}
-							onClick={() => {
-								navigate(`/recipe/${list.slug}`);
-							}}
-						>
-							<Img src={list?.photo?.url} alt="Recipe Photo" />
-							<Div>
-								<SubTitle>
-									<Name>{list?.name?.substring(0, 25)}</Name>
-									{fetchedRecipes.includes(list._id) ? (
-										<>
-											{!showBookMarkControll[list._id] && (
-												<IoBookmark
-													size={20}
-													color="grey"
-													onClick={(e) => {
-														e.stopPropagation();
-														handleSaveRecipe(e, list);
-													}}
-												/>
-											)}
-											{showBookMarkControll[list._id] && (
-												<IoBookmarkOutline
-													size={20}
-													onClick={(e) => {
-														e.stopPropagation();
-														handleSaveRecipe(e, list);
-													}}
-												/>
-											)}
-										</>
-									) : (
-										<>
-											{showBookMarkControll[list._id] && (
-												<IoBookmark
-													size={20}
-													color="grey"
-													onClick={(e) => {
-														e.stopPropagation();
-														handleSaveRecipe(e, list);
-													}}
-												/>
-											)}
-											{!showBookMarkControll[list._id] && (
-												<IoBookmarkOutline
-													size={20}
-													onClick={(e) => {
-														e.stopPropagation();
-														handleSaveRecipe(e, list);
-													}}
-												/>
-											)}
-										</>
-									)}
-								</SubTitle>
-								<Span>{list?.updatedAt?.substring(0, 10)}</Span>
-							</Div>
-						</Recipe>
-					))}
-				</IndianRecipesInnerContainer>
-			</IndianRecipesContainer>
+				<RecipesInnerContainer>
+					<>
+						{recipesListArray.map((list) => (
+							<Recipe
+								key={list._id}
+								onClick={() => {
+									navigate(`/recipe/${list.slug}`);
+								}}
+							>
+								<Img src={list?.photo?.url} alt="Recipe Photo" />
+								<Div>
+									<SubTitle>
+										<Name>{list?.name?.substring(0, 25)}</Name>
+										{fetchedRecipes.includes(list._id) ? (
+											<>
+												{!showBookMarkControll[list._id] && (
+													<IoBookmark
+														size={20}
+														color="grey"
+														onClick={(e) => {
+															e.stopPropagation();
+															handleSaveRecipe(e, list);
+														}}
+													/>
+												)}
+												{showBookMarkControll[list._id] && (
+													<IoBookmarkOutline
+														size={20}
+														onClick={(e) => {
+															e.stopPropagation();
+															handleSaveRecipe(e, list);
+														}}
+													/>
+												)}
+											</>
+										) : (
+											<>
+												{showBookMarkControll[list._id] && (
+													<IoBookmark
+														size={20}
+														color="grey"
+														onClick={(e) => {
+															e.stopPropagation();
+															handleSaveRecipe(e, list);
+														}}
+													/>
+												)}
+												{!showBookMarkControll[list._id] && (
+													<IoBookmarkOutline
+														size={20}
+														onClick={(e) => {
+															e.stopPropagation();
+															handleSaveRecipe(e, list);
+														}}
+													/>
+												)}
+											</>
+										)}
+									</SubTitle>
+									<Span>{list?.updatedAt?.substring(0, 10)}</Span>
+								</Div>
+							</Recipe>
+						))}
+					</>
+				</RecipesInnerContainer>
+			</RecipesContainer>
 		</Layout>
 	);
 };
 
-export default IndianRecipes;
+export default Recipes;

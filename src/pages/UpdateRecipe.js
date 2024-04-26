@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Layout } from "../Layouts/Layout";
-import BgImg from "../images/i-like-food.svg";
+import { Layout } from "../Components/Layouts/Layout";
+import BgImg from "../Components/images/i-like-food.svg";
 import styled from "styled-components";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useAuth } from "../../context/authProvider";
+import { useAuth } from "../context/authProvider";
 import { Select } from "antd";
 import { CiImageOn } from "react-icons/ci";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -272,10 +272,12 @@ const UpdateRecipe = () => {
 	const [photoId, setPhotoId] = useState("");
 	const [userId, setUserId] = useState([]);
 	const [category, setCategory] = useState("");
+	const [categoryName, setCategoryName] = useState("");
 	const [photo, setPhoto] = useState("");
 	const [fid, setFid] = useState("");
 	const [description, setDescription] = useState("");
 	const params = useParams();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		setUserId(auth?.user);
@@ -287,6 +289,7 @@ const UpdateRecipe = () => {
 			const { data } = await axios.get(
 				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-food/${params.slug}`
 			);
+			setCategoryName(data?.food?.category.name);
 			SetName(data.food.name);
 			setPhotoId(data?.food?.photo?.url);
 			setFid(data?.food._id);
@@ -374,7 +377,7 @@ const UpdateRecipe = () => {
 		updatedList[index] = value;
 		setSteps(updatedList);
 	};
-
+	console.log(category);
 	//update recipes
 	const handleUpdateAddRecipe = async (e) => {
 		e.preventDefault();
@@ -391,8 +394,11 @@ const UpdateRecipe = () => {
 				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/update-food/${fid}`,
 				productData
 			);
+
 			if (data) {
 				toast.success(data.message);
+				navigate(`/recipe-category/${categoryName}`);
+				window.location.reload();
 			} else {
 				toast.error(data.message);
 			}

@@ -95,7 +95,7 @@ const ChineseRecipes = () => {
 		try {
 			if (recipes.foods) {
 				const updatedRecipesListArray = recipes.foods.filter(
-					(list) => list?.category === "65806221a2ae14d295402249"
+					(list) => list?.category._id === "65806221a2ae14d295402249"
 				);
 				// Update state with recipe data
 				setRecipesListArray(updatedRecipesListArray.slice(0, 4));

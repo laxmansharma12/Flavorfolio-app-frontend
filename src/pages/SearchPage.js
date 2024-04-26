@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useSearch } from "../../context/searchProvider";
-import { Layout } from "../Layouts/Layout";
+import { useSearch } from "../context/searchProvider";
+import { Layout } from "../Components/Layouts/Layout";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
 import toast from "react-hot-toast";
-import { useAllFetchedRecipes } from "../../context/savedRecipesProvider";
+import { useAllFetchedRecipes } from "../context/savedRecipesProvider";
 import axios from "axios";
-import { useAuth } from "../../context/authProvider";
+import { useAuth } from "../context/authProvider";
 
 const SearchRecipeContainer = styled.div`
 	width: 100%;

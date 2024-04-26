@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Layout } from "../Layouts/Layout";
+import { Layout } from "../Components/Layouts/Layout";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Modal } from "antd";
 import { FaRegQuestionCircle } from "react-icons/fa";
 import toast from "react-hot-toast";
 import styled from "styled-components";
-import { useAuth } from "../../context/authProvider";
+import { useAuth } from "../context/authProvider";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { IoBookmark } from "react-icons/io5";
-import { useAllFetchedRecipes } from "../../context/savedRecipesProvider";
+import { useAllFetchedRecipes } from "../context/savedRecipesProvider";
 
 const RecipesDetailsContainer = styled.div`
 	width: 100%;
@@ -305,6 +305,7 @@ export const RecipeDetails = () => {
 	const params = useParams();
 	const navigate = useNavigate();
 	const [recipe, setRecipe] = useState({});
+	const [categoryName, setCategoryName] = useState("");
 	const [relatedRecipe, setRelatedRecipe] = useState([]);
 	const [fetchedRecipes, setFetchedRecipes] = useAllFetchedRecipes();
 	const [showBookMarkControll, setShowBookMarkControll] = useState({});
@@ -320,6 +321,7 @@ export const RecipeDetails = () => {
 			const { data } = await axios.get(
 				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/get-food/${params.slug}`
 			);
+			setCategoryName(data?.food?.category.name);
 			setRecipe(data?.food);
 			getSimilarRecipe(data?.food._id, data?.food?.category._id);
 		} catch (error) {
@@ -345,9 +347,11 @@ export const RecipeDetails = () => {
 			const { data } = await axios.delete(
 				`${process.env.REACT_APP_API_BASE_URL}/api/v1/food/delete-food/${ok}`
 			);
+			navigate(-1);
 			toast.success("Recipe Deleted Succfully");
 			setOk("");
-			navigate(-1);
+			navigate(`/recipe-category/${categoryName}`);
+			window.location.reload();
 		} catch (error) {
 			console.log(error);
 			toast.error("Something went wrong");
@@ -387,8 +391,8 @@ export const RecipeDetails = () => {
 	};
 
 	useEffect(() => {
-		window.scrollTo(0, 0);
-	}, []);
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	}, [recipe]);
 
 	return (
 		<Layout title={"Recipe details"}>

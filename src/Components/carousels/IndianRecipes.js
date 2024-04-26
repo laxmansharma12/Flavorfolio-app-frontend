@@ -91,7 +91,7 @@ const IndianRecipes = () => {
 	const GetIndianRecipes = () => {
 		try {
 			const updatedRecipesListArray = recipes?.foods?.filter(
-				(list) => list?.category === "658061c3a2ae14d29540223f"
+				(list) => list?.category._id === "658061c3a2ae14d29540223f"
 			);
 			// Ensure only the first 4 elements are stored in recipesListArray
 			if (updatedRecipesListArray)

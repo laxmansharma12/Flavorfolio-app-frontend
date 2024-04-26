@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Layout } from "../Layouts/Layout";
-import BgImg from "../images/i-like-food.svg";
+import { Layout } from "../Components/Layouts/Layout";
+import BgImg from "../Components/images/i-like-food.svg";
 import styled from "styled-components";
-import LoginImg from "../images/loginImg.jpg";
+import LoginImg from "../Components/images/loginImg.jpg";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";

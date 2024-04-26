@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Layout } from "../Layouts/Layout";
+import { Layout } from "../Components/Layouts/Layout";
 import styled from "styled-components";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Radio, Select } from "antd";
-import { useAuth } from "../../context/authProvider";
+import { useAuth } from "../context/authProvider";
 import toast from "react-hot-toast";
-import { useAllRecipes } from "../../context/recipesProvider";
+import { useAllRecipes } from "../context/recipesProvider";
 
 const Option = Select;
 const MyrecipesContainer = styled.div`

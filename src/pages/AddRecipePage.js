@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Layout } from "../Layouts/Layout";
+import { Layout } from "../Components/Layouts/Layout";
 import styled from "styled-components";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { useAuth } from "../../context/authProvider";
+import { useAuth } from "../context/authProvider";
 import { Select } from "antd";
 import { CiImageOn } from "react-icons/ci";
 import SyncLoader from "react-spinners/SyncLoader";
@@ -396,6 +396,13 @@ const AddRecipePage = () => {
 		e.preventDefault();
 		try {
 			if (auth?.user) {
+				if (category === undefined) {
+					toast.error("Please select category");
+					return;
+				} else if (photo === "") {
+					toast.error("Please upload Photo");
+					return;
+				}
 				window.scrollTo(0, 0);
 				setIsSubmitting(true);
 				const RecipeData = new FormData();
@@ -419,6 +426,7 @@ const AddRecipePage = () => {
 					setPhoto("");
 					setCategory();
 					setSteps([""]);
+					window.location.reload();
 				} else {
 					toast.error(data.message);
 				}

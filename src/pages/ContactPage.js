@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import styled from "styled-components";
-import BgImg from "../images/i-like-food.svg";
-import { Layout } from "../Layouts/Layout";
+import BgImg from "../Components/images/i-like-food.svg";
+import { Layout } from "../Components/Layouts/Layout";
 import toast from "react-hot-toast";
 import emailjs from "@emailjs/browser";
 import { FaTwitter } from "react-icons/fa";

@@ -1,23 +1,23 @@
 import React, { useEffect } from "react";
-import { Layout } from "../Layouts/Layout";
-import SearchImgSpice from "../images/spices.png";
-import SearchImgFood from "../images/food1.png";
-import CookingImg1 from "../images/woman-cooking.jpg";
-import CookingImg2 from "../images/couple-cooking.jpg";
-import CookingImg3 from "../images/man-cooking.jpg";
+import { Layout } from "../Components/Layouts/Layout";
+import SearchImgSpice from "../Components/images/spices.png";
+import SearchImgFood from "../Components/images/food1.png";
+import CookingImg1 from "../Components/images/woman-cooking.jpg";
+import CookingImg2 from "../Components/images/couple-cooking.jpg";
+import CookingImg3 from "../Components/images/man-cooking.jpg";
 import styled from "styled-components";
-import IndImg from "../images/gate-of-india.png";
-import AmericaImg from "../images/statue-of-liberty.png";
-import ThaiImg from "../images/wat-phra-kaew.png";
-import MexicoImg from "../images/mexico-pyramid.png";
-import ChinaImg from "../images/chinese.png";
-import OtherImg from "../images/other.png";
+import IndImg from "../Components/images/gate-of-india.png";
+import AmericaImg from "../Components/images/statue-of-liberty.png";
+import ThaiImg from "../Components/images/wat-phra-kaew.png";
+import MexicoImg from "../Components/images/mexico-pyramid.png";
+import ChinaImg from "../Components/images/chinese.png";
+import OtherImg from "../Components/images/other.png";
 import { Link, useNavigate } from "react-router-dom";
-import RecentRecipes from "../carousels/RecentRecipes";
-import IndianRecipes from "../carousels/IndianRecipes";
-import ChineseRecipes from "../carousels/ChineseRecipes";
-import AmericanRecipes from "../carousels/AmericanRecipes";
-import { useAuth } from "../../context/authProvider";
+import RecentRecipes from "../Components/carousels/RecentRecipes";
+import IndianRecipes from "../Components/carousels/IndianRecipes";
+import ChineseRecipes from "../Components/carousels/ChineseRecipes";
+import AmericanRecipes from "../Components/carousels/AmericanRecipes";
+import { useAuth } from "../context/authProvider";
 import toast from "react-hot-toast";
 
 const CategoryBanner = styled.div`
@@ -117,9 +117,30 @@ const RecipesTitle = styled.h2`
 	}
 `;
 
+const AddBtn = styled.a`
+	background-color: #000;
+	color: #fff;
+	text-decoration: none;
+	font-weight: 700;
+	border: none;
+	border-radius: 5px;
+	padding: 10px;
+	margin-top: 10px;
+	letter-spacing: 0.5px;
+	&:hover {
+		background-color: rgb(21, 20, 20);
+	}
+	@media (max-width: 640px) {
+		padding: 5px 10px;
+		font-weight: 500;
+		margin-top: 20px;
+	}
+`;
+
 const Home = () => {
 	const [auth, setAuth] = useAuth();
 	const navigate = useNavigate();
+
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
@@ -145,37 +166,37 @@ const Home = () => {
 			</SearchContainer>
 			<CategoryBanner>
 				<CategoryBannerInner>
-					<Link className="link" to={"/indian"}>
+					<Link className="link" to={"/recipe-category/Indian"}>
 						<Category>
 							<CategoryIcons src={IndImg} />
 							<CategoryName>Indian</CategoryName>
 						</Category>
 					</Link>
-					<Link className="link" to={"/thai"}>
+					<Link className="link" to={"/recipe-category/Thai"}>
 						<Category>
 							<CategoryIcons src={ThaiImg} />
 							<CategoryName>Thai</CategoryName>
 						</Category>
 					</Link>
-					<Link className="link" to={"/american"}>
+					<Link className="link" to={"/recipe-category/American"}>
 						<Category>
 							<CategoryIcons src={AmericaImg} />
 							<CategoryName>American</CategoryName>
 						</Category>
 					</Link>
-					<Link className="link" to={"/chinese"}>
+					<Link className="link" to={"/recipe-category/Chinese"}>
 						<Category>
 							<CategoryIcons src={ChinaImg} />
 							<CategoryName>Chinese</CategoryName>
 						</Category>
 					</Link>
-					<Link className="link" to={"Mexican"}>
+					<Link className="link" to={"/recipe-category/Mexican"}>
 						<Category>
 							<CategoryIcons src={MexicoImg} />
 							<CategoryName>Mexican</CategoryName>
 						</Category>
 					</Link>
-					<Link className="link" to={"/other"}>
+					<Link className="link" to={"/recipe-category/Other"}>
 						<Category>
 							<CategoryIcons src={OtherImg} />
 							<CategoryName>Other</CategoryName>
@@ -210,18 +231,15 @@ const Home = () => {
 					</ImagesSection>
 					<H1>Publish your recipe for FREE today</H1>
 					<P>Publish your Recipe in front of thousands of people for free.</P>
-					<Link
-						className="addbtn"
+					<AddBtn
 						onClick={() => {
-							{
-								auth?.user
-									? navigate("/addrecipe")
-									: toast.error("Please Login To Add Recipe");
-							}
+							auth?.user
+								? navigate("/addrecipe")
+								: toast.error("Please Login To Add Recipe");
 						}}
 					>
 						Submit Recipe
-					</Link>
+					</AddBtn>
 				</PublishRecipeInnerContainer>
 			</PublishRecipeContainer>
 		</Layout>
@@ -245,25 +263,7 @@ const PublishRecipeInnerContainer = styled.div`
 	align-items: center;
 	flex-direction: column;
 	padding: 60px 0;
-	.addbtn {
-		background-color: #000;
-		color: #fff;
-		text-decoration: none;
-		font-weight: 700;
-		border: none;
-		border-radius: 5px;
-		padding: 10px;
-		margin-top: 10px;
-		letter-spacing: 0.5px;
-		&:hover {
-			background-color: rgb(21, 20, 20);
-		}
-		@media (max-width: 640px) {
-			padding: 5px 10px;
-			font-weight: 500;
-			margin-top: 20px;
-		}
-	}
+
 	@media (max-width: 640px) {
 		width: 90%;
 		text-align: center;

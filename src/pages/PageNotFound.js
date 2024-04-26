@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout } from "../Layouts/Layout";
+import { Layout } from "../Components/Layouts/Layout";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 

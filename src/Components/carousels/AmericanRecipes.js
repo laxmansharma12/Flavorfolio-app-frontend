@@ -93,7 +93,7 @@ const AmericanRecipes = () => {
 		try {
 			if (recipes.foods) {
 				const updatedRecipesListArray = recipes.foods.filter(
-					(list) => list?.category === "65806212a2ae14d295402246"
+					(list) => list?.category._id === "65806212a2ae14d295402246"
 				);
 				setRecipesListArray(updatedRecipesListArray.slice(0, 4));
 			}
